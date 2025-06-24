@@ -6,7 +6,6 @@
     <title>Amir'O Graphy - Photography Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* All your existing CSS styles remain unchanged */
         :root {
             --primary: #3498db;
             --secondary: #2c3e50;
@@ -27,45 +26,727 @@
             color: #333;
         }
         
-        /* ... (keep all your existing styles) ... */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--dark);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+        
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            color: white;
+            font-size: 1.2rem;
+            margin-top: 20px;
+        }
+        
+        header {
+            background-color: var(--secondary);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.3;
+            z-index: 0;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            font-weight: 300;
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+        
+        nav {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-around;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-item:hover {
+            background-color: var(--light);
+        }
+        
+        .nav-item i {
+            font-size: 1.5rem;
+            margin-bottom: 0.3rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--secondary);
+        }
+        
+        .marketplace {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .photo-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .photo-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .photo-thumbnail {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .photo-details {
+            padding: 1rem;
+        }
+        
+        .photo-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .photo-price {
+            font-weight: bold;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+        
+        .free-badge {
+            background-color: #2ecc71;
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: inline-block;
+        }
+        
+        .action-btn {
+            display: block;
+            width: 100%;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .download-btn {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .download-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .buy-btn {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .buy-btn:hover {
+            background-color: #c0392b;
+        }
+        
+        .upload-area {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .upload-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0 auto;
+        }
+        
+        .feed {
+            display: grid;
+            gap: 1.5rem;
+        }
+        
+        .feed-post {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .post-image {
+            width: 100%;
+            max-height: 500px;
+            object-fit: cover;
+        }
+        
+        .post-caption {
+            padding: 1rem;
+        }
+        
+        .post-actions {
+            display: flex;
+            padding: 0.5rem 1rem;
+            border-top: 1px solid #eee;
+        }
+        
+        .post-action {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            margin-right: 1rem;
+            cursor: pointer;
+        }
+        
+        .profile-header {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--light);
+            margin-bottom: 1rem;
+        }
+        
+        .profile-name {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .profile-bio {
+            color: #666;
+            margin-bottom: 1rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .profile-stats {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        .member-badge {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+        
+        .profile-tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 1rem;
+        }
+        
+        .profile-tab {
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .profile-tab.active {
+            border-bottom-color: var(--primary);
+            color: var(--primary);
+            font-weight: bold;
+        }
+        
+        .about-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .about-content {
+            line-height: 1.6;
+        }
+        
+        .about-content p {
+            margin-bottom: 1rem;
+        }
+        
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .google-login-btn {
+            background-color: #4285F4;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin: 0 auto;
+            width: 100%;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+        
+        .google-icon {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .modal-text {
+            text-align: center;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .subscription-options {
+            display: grid;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .subscription-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .subscription-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .subscription-card.selected {
+            border-color: var(--primary);
+            background-color: rgba(52, 152, 219, 0.05);
+        }
+        
+        .subscription-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--secondary);
+        }
+        
+        .subscription-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subscription-features {
+            list-style-type: none;
+            margin-bottom: 1rem;
+        }
+        
+        .subscription-features li {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .subscription-features li:before {
+            content: "✓";
+            color: #2ecc71;
+        }
+        
+        .subscribe-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.6rem 1rem;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        footer {
+            background-color: var(--secondary);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        .footer-text {
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .nav-container {
+                flex-wrap: wrap;
+            }
+            
+            .nav-item {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+            
+            .nav-item i {
+                font-size: 1.2rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Your existing HTML structure remains the same -->
+    <!-- Loading Screen -->
     <div class="loading-screen">
         <div class="loading-spinner"></div>
         <div class="loading-text">Loading your visual journey...</div>
     </div>
     
+    <!-- Header -->
     <header>
-        <!-- ... (keep header content) ... -->
+        <img src="https://source.unsplash.com/random/1600x900/?photography" alt="Hero Image" class="hero-image">
+        <div class="header-content">
+            <h1>Amir'O Graphy</h1>
+            <p class="tagline">Capturing moments, creating memories</p>
+        </div>
     </header>
     
+    <!-- Navigation -->
     <nav>
-        <!-- ... (keep navigation) ... -->
+        <div class="nav-container">
+            <div class="nav-item" onclick="showSection('home')">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </div>
+            <div class="nav-item" onclick="showSection('marketplace')">
+                <i class="fas fa-store"></i>
+                <span>Marketplace</span>
+            </div>
+            <div class="nav-item" onclick="showSection('feed')">
+                <i class="fas fa-images"></i>
+                <span>Daily Feed</span>
+            </div>
+            <div class="nav-item" onclick="showSection('profile')">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </div>
+            <div class="nav-item" onclick="showSection('about')">
+                <i class="fas fa-info-circle"></i>
+                <span>About Us</span>
+            </div>
+        </div>
     </nav>
     
+    <!-- Main Content -->
     <div class="container">
-        <!-- All your sections (home, marketplace, feed, profile, about) -->
+        <!-- Home Section -->
+        <section id="home-section">
+            <h2 class="section-title">Welcome to Amir'O Graphy</h2>
+            <p>Discover stunning photography and share your own visual stories with our community.</p>
+            
+            <div class="marketplace" id="featured-photos" style="margin-top: 2rem;">
+                <!-- Featured photos will be loaded here -->
+            </div>
+            
+            <button class="upload-btn" onclick="showSection('feed')">
+                <i class="fas fa-upload"></i> Upload Your Photo
+            </button>
+        </section>
+        
+        <!-- Marketplace Section -->
+        <section id="marketplace-section" style="display: none;">
+            <h2 class="section-title">Marketplace</h2>
+            <p>Browse and purchase premium photos or download free selections.</p>
+            
+            <div class="filter-options" style="margin: 1rem 0;">
+                <button onclick="filterPhotos('all')">All</button>
+                <button onclick="filterPhotos('free')">Free</button>
+                <button onclick="filterPhotos('premium')">Premium</button>
+            </div>
+            
+            <div class="marketplace" id="marketplace-photos">
+                <!-- Photos loaded via JavaScript -->
+            </div>
+        </section>
+        
+        <!-- Daily Feed Section -->
+        <section id="feed-section" style="display: none;">
+            <div class="upload-area">
+                <input type="file" id="photo-upload" accept="image/*" style="display: none;">
+                <button class="upload-btn" onclick="document.getElementById('photo-upload').click()">
+                    <i class="fas fa-plus"></i> Upload Photo
+                </button>
+            </div>
+            
+            <h2 class="section-title">Community Feed</h2>
+            
+            <div class="feed" id="community-feed">
+                <!-- Posts loaded via JavaScript -->
+            </div>
+        </section>
+        
+        <!-- Profile Section -->
+        <section id="profile-section" style="display: none;">
+            <div class="profile-header" id="user-profile">
+                <!-- Loaded via JavaScript -->
+            </div>
+            
+            <div class="profile-tabs">
+                <div class="profile-tab active" onclick="switchTab('uploads')">My Uploads</div>
+                <div class="profile-tab" onclick="switchTab('favorites')">Favorites</div>
+                <div class="profile-tab" onclick="switchTab('purchased')">Purchased</div>
+            </div>
+            
+            <div id="uploads-tab">
+                <div class="marketplace" id="user-uploads">
+                    <!-- User's photos loaded via JavaScript -->
+                </div>
+            </div>
+            
+            <div id="favorites-tab" style="display: none;">
+                <p>Your favorite photos will appear here.</p>
+            </div>
+            
+            <div id="purchased-tab" style="display: none;">
+                <p>Photos you've purchased will appear here.</p>
+            </div>
+        </section>
+        
+        <!-- About Us Section -->
+        <section id="about-section" style="display: none;">
+            <div class="about-section">
+                <h2 class="section-title">About Amir'O Graphy</h2>
+                <div class="about-content">
+                    <p>Welcome to Amir'O Graphy, a platform dedicated to photographers and visual storytellers. Our mission is to create a community where artists can share their work, gain exposure, and monetize their creativity.</p>
+                    
+                    <h3 style="margin: 1.5rem 0 1rem 0;">Copyright Guidelines</h3>
+                    <p>All photographs displayed on this platform are the intellectual property of their respective creators. Unauthorized use, reproduction, or distribution of these images without explicit permission is strictly prohibited.</p>
+                    
+                    <p>When you purchase a photo through Amir'O Graphy, you're acquiring specific usage rights as outlined in our licensing agreements. Full copyright transfer requires a separate agreement with the photographer.</p>
+                    
+                    <h3 style="margin: 1.5rem 0 1rem 0;">Community Guidelines</h3>
+                    <p>We encourage respectful engagement within our community. Please:</p>
+                    <ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
+                        <li>Credit original photographers when sharing their work</li>
+                        <li>Respect copyright and licensing terms</li>
+                        <li>Provide constructive feedback</li>
+                        <li>Report any inappropriate content</li>
+                    </ul>
+                    
+                    <p>For licensing inquiries or copyright issues, please contact us at <strong>copyright@amirography.com</strong>.</p>
+                </div>
+            </div>
+        </section>
     </div>
     
-    <!-- Modals -->
+    <!-- Login Modal -->
     <div class="modal" id="login-modal">
-        <!-- ... (keep login modal) ... -->
+        <div class="modal-content">
+            <h3 class="modal-title">Sign In to Continue</h3>
+            <button class="google-login-btn" id="google-login">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" class="google-icon">
+                Sign in with Google
+            </button>
+            <p class="modal-text">No passwords needed—just your Google account.</p>
+        </div>
     </div>
     
+    <!-- Subscription Modal -->
     <div class="modal" id="subscription-modal">
-        <!-- ... (keep subscription modal) ... -->
+        <div class="modal-content">
+            <h3 class="modal-title">Upgrade Your Membership</h3>
+            <p class="modal-text" style="margin-bottom: 1.5rem;">Choose the plan that works best for you:</p>
+            
+            <div class="subscription-options">
+                <div class="subscription-card" onclick="selectPlan('explorer')" id="explorer-plan">
+                    <h4 class="subscription-title">Explorer</h4>
+                    <div class="subscription-price">$2.99/month</div>
+                    <ul class="subscription-features">
+                        <li>5 daily downloads</li>
+                        <li>Access to free content</li>
+                        <li>Basic support</li>
+                    </ul>
+                    <button class="subscribe-btn" onclick="subscribe('explorer')">Select Plan</button>
+                </div>
+                
+                <div class="subscription-card selected" onclick="selectPlan('unlimited')" id="unlimited-plan">
+                    <h4 class="subscription-title">Unlimited</h4>
+                    <div class="subscription-price">$7.99/month</div>
+                    <ul class="subscription-features">
+                        <li>Unlimited downloads</li>
+                        <li>Access to premium content</li>
+                        <li>Priority support</li>
+                        <li>Exclusive tutorials</li>
+                    </ul>
+                    <button class="subscribe-btn" onclick="subscribe('unlimited')">Select Plan</button>
+                </div>
+            </div>
+        </div>
     </div>
     
+    <!-- Footer -->
     <footer>
-        <!-- ... (keep footer) ... -->
+        <p class="footer-text">© <span id="current-year"></span> Amir'O Graphy. All rights reserved.</p>
     </footer>
 
-    <!-- Firebase SDK -->
+    <!-- Firebase SDKs -->
     <script type="module">
-        // Import Firebase modules
+        // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
         import { 
             getAuth, 
             GoogleAuthProvider, 
@@ -94,12 +775,13 @@
             uploadBytes,
             getDownloadURL
         } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+        import { 
+            getFunctions, 
+            httpsCallable 
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-functions.js";
 
-        // ========================
-        // CONFIGURATION SECTION
-        // ========================
-        
-        // 1. Firebase Configuration (replace with your actual config)
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
         const firebaseConfig = {
             apiKey: "AIzaSyBN54CFkJqgO_LMu5BUNRkHnxcC56WdD0w",
             authDomain: "amir-o-graphy.firebaseapp.com",
@@ -110,25 +792,36 @@
             measurementId: "G-YX7ZQ4ZQF2"
         };
 
-        // 2. DeepSeek API Configuration
-        const DEEPSEEK_API_KEY = "YOUR_DEEPSEEK_API_KEY_HERE"; // 👈 Replace with your actual key
-        const DEEPSEEK_API_URL = "https://api.deepseek.com/v1/chat/completions";
-
-        // ========================
-        // INITIALIZATION
-        // ========================
-        
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
         const auth = getAuth(app);
         const db = getFirestore(app);
         const storage = getStorage(app);
+        const functions = getFunctions(app);
         const provider = new GoogleAuthProvider();
 
-        // ========================
-        // DEEPSEEK API INTEGRATION
-        // ========================
-        
+        // DeepSeek API Configuration (⚠️ Remove this key before committing to GitHub)
+        const DEEPSEEK_API_KEY = "sk-1dddde875f0841039567bc58fb399245";
+        const DEEPSEEK_API_URL = "https://api.deepseek.com/v1/chat/completions";
+
+        // DOM Elements
+        const googleLoginBtn = document.getElementById('google-login');
+        const photoUploadInput = document.getElementById('photo-upload');
+        const currentYearSpan = document.getElementById('current-year');
+
+        // Set current year in footer
+        currentYearSpan.textContent = new Date().getFullYear();
+
+        // Global Variables
+        let currentUser = null;
+        let photos = [];
+        let posts = [];
+
+        // ========================================
+        // DEEPSEEK API FUNCTIONS
+        // ========================================
+
         /**
          * Generates photo tags using DeepSeek AI
          * @param {string} description - Photo description/filename
@@ -136,6 +829,14 @@
          */
         async function generatePhotoTags(description) {
             try {
+                // In production, use Firebase Functions
+                if (!window.location.hostname.includes("localhost")) {
+                    const generateTagsCloud = httpsCallable(functions, 'generateTags');
+                    const { data } = await generateTagsCloud({ description });
+                    return data.tags;
+                }
+                
+                // Local development fallback (remove before production)
                 const response = await fetch(DEEPSEEK_API_URL, {
                     method: "POST",
                     headers: {
@@ -144,45 +845,37 @@
                     },
                     body: JSON.stringify({
                         model: "deepseek-chat",
-                        messages: [
-                            {
-                                role: "user",
-                                content: `Generate 5 relevant tags for a photography website for this image: "${description}". 
-                                          Return only comma-separated keywords, nothing else. 
-                                          Example: "landscape,sunset,nature,travel,outdoor"`
-                            }
-                        ],
+                        messages: [{
+                            role: "user",
+                            content: `Generate 5 photography tags for: "${description}". 
+                                      Return only comma-separated keywords like: landscape,sunset,nature`
+                        }],
                         temperature: 0.7
                     })
                 });
-
-                if (!response.ok) {
-                    throw new Error(`API error: ${response.status}`);
-                }
-
+                
+                if (!response.ok) throw new Error("API request failed");
                 const data = await response.json();
-                const tagsString = data.choices[0].message.content;
-                return tagsString.split(',').map(tag => tag.trim().toLowerCase());
+                return data.choices[0].message.content.split(',').map(tag => tag.trim());
             } catch (error) {
-                console.error("DeepSeek API error:", error);
-                // Return default tags if API fails
-                return ["photography", "art", "creative", "photo", "image"];
+                console.error("Tag generation failed:", error);
+                return ["photography", "art", "creative"]; // Default fallback
             }
         }
 
-        // ========================
+        // ========================================
         // PHOTO UPLOAD WITH AI TAGGING
-        // ========================
-        
+        // ========================================
+
         async function handlePhotoUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
-
-            if (!auth.currentUser) {
+            
+            if (!currentUser) {
                 showLoginModal();
                 return;
             }
-
+            
             try {
                 // Show loading state
                 const loadingScreen = document.querySelector('.loading-screen');
@@ -193,53 +886,437 @@
                 const tags = await generatePhotoTags(file.name);
                 
                 // 2. Upload to Firebase Storage
-                const storageRef = ref(storage, `photos/${auth.currentUser.uid}/${Date.now()}_${file.name}`);
-                const uploadTask = await uploadBytes(storageRef, file);
-                const downloadURL = await getDownloadURL(uploadTask.ref);
+                const storageRef = ref(storage, `photos/${currentUser.uid}/${Date.now()}_${file.name}`);
+                const snapshot = await uploadBytes(storageRef, file);
+                const downloadURL = await getDownloadURL(snapshot.ref);
                 
                 // 3. Save to Firestore with AI tags
                 await addDoc(collection(db, "photos"), {
                     url: downloadURL,
                     title: file.name.split('.')[0],
-                    description: "",
                     tags: tags,
                     price: 0, // Free by default
-                    ownerId: auth.currentUser.uid,
-                    ownerName: auth.currentUser.displayName,
+                    ownerId: currentUser.uid,
+                    ownerName: currentUser.displayName,
                     createdAt: serverTimestamp(),
                     downloads: 0,
                     isPublic: true
                 });
-
-                // Refresh displays
-                loadUserPhotos(auth.currentUser.uid);
+                
+                alert("Photo uploaded successfully with AI tags: " + tags.join(', '));
+                loadUserPhotos(currentUser.uid);
                 loadCommunityFeed();
-                alert("Photo uploaded successfully with AI-generated tags!");
             } catch (error) {
                 console.error("Upload error:", error);
                 alert("Upload failed: " + error.message);
             } finally {
-                // Hide loading screen
                 document.querySelector('.loading-screen').classList.add('hidden');
             }
         }
 
-        // ========================
-        // REST OF YOUR FIREBASE CODE
-        // (All your existing Firebase functions remain unchanged)
-        // ========================
-        
-        // ... (keep all your existing functions like signInWithGoogle, loadMarketplacePhotos, etc) ...
+        // ========================================
+        // FIREBASE DATA FUNCTIONS
+        // ========================================
 
-        // Initialize the app
-        document.addEventListener('DOMContentLoaded', () => {
-            // Set up event listeners
-            document.getElementById('google-login').addEventListener('click', signInWithGoogle);
-            document.getElementById('photo-upload').addEventListener('change', handlePhotoUpload);
+        async function signInWithGoogle() {
+            try {
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
+                
+                // Check if user exists in Firestore
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                
+                if (!userDoc.exists()) {
+                    // Create new user document
+                    await setDoc(doc(db, "users", user.uid), {
+                        name: user.displayName,
+                        email: user.email,
+                        subscription: "free",
+                        joinDate: serverTimestamp(),
+                        purchasedPhotos: []
+                    });
+                }
+                
+                closeModal();
+                updateUserProfile(user);
+            } catch (error) {
+                console.error("Google sign-in error:", error);
+                alert("Sign-in failed. Please try again.");
+            }
+        }
+
+        async function updateUserProfile(user) {
+            const userDoc = await getDoc(doc(db, "users", user.uid));
+            if (userDoc.exists()) {
+                const userData = userDoc.data();
+                const profileHeader = document.getElementById('user-profile');
+                
+                profileHeader.innerHTML = `
+                    <img src="${user.photoURL || 'https://source.unsplash.com/random/300x300/?portrait'}" 
+                         alt="Profile" class="profile-pic">
+                    <h2 class="profile-name">${user.displayName || 'User'}</h2>
+                    <p class="profile-bio">${userData.bio || 'No bio yet'}</p>
+                    
+                    <div class="member-badge">
+                        <i class="fas fa-${userData.subscription === 'unlimited' ? 'crown' : 'user'}"></i> 
+                        ${userData.subscription === 'unlimited' ? 'PRO MEMBER' : 'FREE MEMBER'}
+                    </div>
+                    
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <div class="stat-value" id="photo-count">0</div>
+                            <div class="stat-label">Photos</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">0</div>
+                            <div class="stat-label">Followers</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">0</div>
+                            <div class="stat-label">Following</div>
+                        </div>
+                    </div>
+                    
+                    <button class="action-btn" style="background-color: ${userData.subscription === 'unlimited' ? 'var(--accent)' : 'var(--primary)'};" 
+                            onclick="showSubscriptionModal()">
+                        ${userData.subscription === 'unlimited' ? 'Manage Plan' : 'Upgrade Plan'}
+                    </button>
+                `;
+            }
+        }
+
+        async function loadFeaturedPhotos() {
+            try {
+                const q = query(collection(db, "photos"), 
+                              where("isPublic", "==", true),
+                              orderBy("createdAt", "desc"),
+                              limit(4));
+                const snapshot = await getDocs(q);
+                
+                const featuredContainer = document.getElementById('featured-photos');
+                featuredContainer.innerHTML = '';
+                
+                snapshot.forEach(doc => {
+                    const photo = doc.data();
+                    featuredContainer.innerHTML += `
+                        <div class="photo-card">
+                            <img src="${photo.url}" alt="${photo.title}" class="photo-thumbnail">
+                            <div class="photo-details">
+                                <h3 class="photo-title">${photo.title}</h3>
+                                ${photo.price > 0 ? 
+                                    `<div class="photo-price">$${photo.price.toFixed(2)}</div>
+                                     <button class="action-btn buy-btn" onclick="handlePhotoAction('${doc.id}', ${photo.price})">Buy Now</button>` :
+                                    `<span class="free-badge">FREE</span>
+                                     <button class="action-btn download-btn" onclick="handlePhotoAction('${doc.id}', 0)">Download</button>`}
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                console.error("Error loading featured photos:", error);
+            }
+        }
+
+        async function loadMarketplacePhotos(filter = 'all') {
+            try {
+                let q;
+                if (filter === 'free') {
+                    q = query(collection(db, "photos"), 
+                        where("isPublic", "==", true),
+                        where("price", "==", 0),
+                        orderBy("createdAt", "desc"));
+                } else if (filter === 'premium') {
+                    q = query(collection(db, "photos"), 
+                        where("isPublic", "==", true),
+                        where("price", ">", 0),
+                        orderBy("price"),
+                        orderBy("createdAt", "desc"));
+                } else {
+                    q = query(collection(db, "photos"), 
+                        where("isPublic", "==", true),
+                        orderBy("createdAt", "desc"));
+                }
+                
+                const snapshot = await getDocs(q);
+                const marketplaceContainer = document.getElementById('marketplace-photos');
+                marketplaceContainer.innerHTML = '';
+                
+                snapshot.forEach(doc => {
+                    const photo = doc.data();
+                    marketplaceContainer.innerHTML += `
+                        <div class="photo-card">
+                            <img src="${photo.url}" alt="${photo.title}" class="photo-thumbnail">
+                            <div class="photo-details">
+                                <h3 class="photo-title">${photo.title}</h3>
+                                ${photo.price > 0 ? 
+                                    `<div class="photo-price">$${photo.price.toFixed(2)}</div>
+                                     <button class="action-btn buy-btn" onclick="handlePhotoAction('${doc.id}', ${photo.price})">Buy Now</button>` :
+                                    `<span class="free-badge">FREE</span>
+                                     <button class="action-btn download-btn" onclick="handlePhotoAction('${doc.id}', 0)">Download</button>`}
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                console.error("Error loading marketplace photos:", error);
+            }
+        }
+
+        async function loadUserPhotos(userId) {
+            try {
+                const q = query(collection(db, "photos"), 
+                              where("ownerId", "==", userId),
+                              orderBy("createdAt", "desc"));
+                const snapshot = await getDocs(q);
+                
+                const userUploadsContainer = document.getElementById('user-uploads');
+                userUploadsContainer.innerHTML = '';
+                
+                snapshot.forEach(doc => {
+                    const photo = doc.data();
+                    userUploadsContainer.innerHTML += `
+                        <div class="photo-card">
+                            <img src="${photo.url}" alt="${photo.title}" class="photo-thumbnail">
+                            <div class="photo-details">
+                                <h3 class="photo-title">${photo.title}</h3>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button class="action-btn" style="background-color: #95a5a6; flex: 1;"
+                                            onclick="editPhoto('${doc.id}')">Edit</button>
+                                    <button class="action-btn" style="background-color: var(--accent); flex: 1;"
+                                            onclick="deletePhoto('${doc.id}')">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                // Update photo count in profile
+                document.getElementById('photo-count').textContent = snapshot.size;
+            } catch (error) {
+                console.error("Error loading user photos:", error);
+            }
+        }
+
+        async function loadCommunityFeed() {
+            try {
+                const q = query(collection(db, "photos"), 
+                              where("isPublic", "==", true),
+                              orderBy("createdAt", "desc"),
+                              limit(10));
+                const snapshot = await getDocs(q);
+                
+                const feedContainer = document.getElementById('community-feed');
+                feedContainer.innerHTML = '';
+                
+                snapshot.forEach(doc => {
+                    const photo = doc.data();
+                    feedContainer.innerHTML += `
+                        <div class="feed-post">
+                            <img src="${photo.url}" alt="Post" class="post-image">
+                            <div class="post-caption">
+                                <p>${photo.title} • Posted by ${photo.ownerName}</p>
+                            </div>
+                            <div class="post-actions">
+                                <div class="post-action">
+                                    <i class="fas fa-heart"></i>
+                                    <span>0</span>
+                                </div>
+                                <div class="post-action">
+                                    <i class="fas fa-comment"></i>
+                                    <span>0</span>
+                                </div>
+                                <div class="post-action">
+                                    <i class="fas fa-share"></i>
+                                    <span>Share</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                console.error("Error loading community feed:", error);
+            }
+        }
+
+        async function handlePhotoAction(photoId, price) {
+            if (!currentUser) {
+                showLoginModal();
+                return;
+            }
             
-            // ... (rest of your initialization code) ...
+            if (price > 0) {
+                if (confirm(`Purchase this photo for $${price.toFixed(2)}?`)) {
+                    await purchasePhoto(photoId, price);
+                }
+            } else {
+                await downloadPhoto(photoId);
+            }
+        }
+
+        async function purchasePhoto(photoId, price) {
+            try {
+                // Record transaction
+                await addDoc(collection(db, "transactions"), {
+                    userId: currentUser.uid,
+                    photoId: photoId,
+                    amount: price,
+                    type: "photo_purchase",
+                    date: serverTimestamp()
+                });
+                
+                // Add to user's purchased photos
+                await updateDoc(doc(db, "users", currentUser.uid), {
+                    purchasedPhotos: arrayUnion(photoId)
+                });
+                
+                alert("Purchase successful! The photo is now available in your profile.");
+            } catch (error) {
+                console.error("Purchase error:", error);
+                alert("Purchase failed. Please try again.");
+            }
+        }
+
+        async function downloadPhoto(photoId) {
+            try {
+                const photoDoc = await getDoc(doc(db, "photos", photoId));
+                if (photoDoc.exists()) {
+                    const photo = photoDoc.data();
+                    
+                    // Record download
+                    await updateDoc(doc(db, "photos", photoId), {
+                        downloads: increment(1)
+                    });
+                    
+                    // Trigger download
+                    const a = document.createElement('a');
+                    a.href = photo.url;
+                    a.download = photo.title || "photo";
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                }
+            } catch (error) {
+                console.error("Download error:", error);
+                alert("Download failed. Please try again.");
+            }
+        }
+
+        async function subscribe(plan) {
+            if (!currentUser) {
+                showLoginModal();
+                return;
+            }
+            
+            try {
+                // In a real app, integrate with Stripe/PayPal here
+                await updateDoc(doc(db, "users", currentUser.uid), {
+                    subscription: plan === 'explorer' ? 'explorer' : 'unlimited'
+                });
+                
+                alert(`Subscription updated to ${plan} plan!`);
+                closeModal();
+                updateUserProfile(currentUser);
+            } catch (error) {
+                console.error("Subscription error:", error);
+                alert("Subscription failed. Please try again.");
+            }
+        }
+
+        // ========================================
+        // UI FUNCTIONS
+        // ========================================
+
+        function showSection(sectionId) {
+            document.querySelectorAll('section[id$="-section"]').forEach(section => {
+                section.style.display = 'none';
+            });
+            document.getElementById(`${sectionId}-section`).style.display = 'block';
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.profile-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            document.querySelectorAll('#uploads-tab, #favorites-tab, #purchased-tab').forEach(tab => {
+                tab.style.display = 'none';
+            });
+            
+            document.getElementById(`${tabId}-tab`).style.display = 'block';
+        }
+
+        function showLoginModal() {
+            document.getElementById('login-modal').classList.add('active');
+        }
+
+        function showSubscriptionModal() {
+            if (!currentUser) {
+                showLoginModal();
+                return;
+            }
+            document.getElementById('subscription-modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.classList.remove('active');
+            });
+        }
+
+        function selectPlan(planId) {
+            document.querySelectorAll('.subscription-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.getElementById(`${planId}-plan`).classList.add('selected');
+        }
+
+        function filterPhotos(type) {
+            loadMarketplacePhotos(type);
+        }
+
+        // ========================================
+        // INITIALIZATION
+        // ========================================
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Simulate loading screen
+            setTimeout(() => {
+                document.querySelector('.loading-screen').classList.add('hidden');
+            }, 1500);
+
+            // Set up auth state listener
+            onAuthStateChanged(auth, (user) => {
+                currentUser = user;
+                if (user) {
+                    console.log("User signed in:", user.uid);
+                    updateUserProfile(user);
+                    loadUserPhotos(user.uid);
+                } else {
+                    console.log("User signed out");
+                }
+            });
+
+            // Load initial data
+            loadFeaturedPhotos();
+            loadMarketplacePhotos();
+            loadCommunityFeed();
+
+            // Set up event listeners
+            googleLoginBtn.addEventListener('click', signInWithGoogle);
+            photoUploadInput.addEventListener('change', handlePhotoUpload);
         });
 
+        // Make functions available globally for HTML onclick attributes
+        window.showSection = showSection;
+        window.switchTab = switchTab;
+        window.showLoginModal = showLoginModal;
+        window.showSubscriptionModal = showSubscriptionModal;
+        window.closeModal = closeModal;
+        window.selectPlan = selectPlan;
+        window.subscribe = subscribe;
+        window.handlePhotoAction = handlePhotoAction;
+        window.filterPhotos = filterPhotos;
     </script>
 </body>
 </html>
