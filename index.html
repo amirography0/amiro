@@ -3,21 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amir'O Graphy - Professional Photography Platform</title>
+    <title>Amir'O Graphy - Photography Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root {
             --primary: #3498db;
-            --primary-light: rgba(52, 152, 219, 0.2);
+            --primary-light: #5dade2;
             --secondary: #2c3e50;
             --accent: #e74c3c;
-            --accent-light: rgba(231, 76, 60, 0.2);
+            --accent-light: #ec7063;
             --success: #2ecc71;
-            --success-light: rgba(46, 204, 113, 0.2);
+            --warning: #f39c12;
             --light: #ecf0f1;
             --dark: #2c3e50;
-            --gold: #ffd700;
-            --silver: #c0c0c0;
+            --darker: #1a252f;
+            --gray: #95a5a6;
+            --white: #ffffff;
         }
         
         * {
@@ -41,35 +42,38 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at center, var(--primary-light) 0%, transparent 70%);
-            opacity: 0;
-            pointer-events: none;
+            background: radial-gradient(circle at center, 
+                rgba(52, 152, 219, 0.1) 0%, 
+                rgba(231, 76, 60, 0.05) 50%, 
+                rgba(46, 204, 113, 0.05) 100%);
             z-index: -1;
+            opacity: 0;
             animation: pulseGlow 8s infinite alternate;
         }
         
         @keyframes pulseGlow {
             0% {
-                opacity: 0.1;
+                opacity: 0.3;
                 transform: scale(1);
             }
             50% {
-                opacity: 0.3;
-                transform: scale(1.05);
+                opacity: 0.5;
+                transform: scale(1.02);
             }
             100% {
-                opacity: 0.1;
+                opacity: 0.3;
                 transform: scale(1);
             }
         }
         
+        /* Loading Screen */
         .loading-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: var(--dark);
+            background-color: var(--darker);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -84,12 +88,13 @@
         }
         
         .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid rgba(255, 255, 255, 0.3);
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255, 255, 255, 0.1);
             border-radius: 50%;
             border-top-color: var(--primary);
-            animation: spin 1s ease-in-out infinite;
+            border-bottom-color: var(--accent);
+            animation: spin 1.5s linear infinite;
             margin-bottom: 20px;
             position: relative;
         }
@@ -97,23 +102,23 @@
         .loading-spinner::after {
             content: '';
             position: absolute;
-            top: -10px;
-            left: -10px;
-            right: -10px;
-            bottom: -10px;
-            border: 5px solid rgba(52, 152, 219, 0.1);
+            top: -8px;
+            left: -8px;
+            right: -8px;
+            bottom: -8px;
+            border: 5px solid rgba(255, 255, 255, 0.05);
             border-radius: 50%;
-            animation: pulse 2s ease-out infinite;
+            border-top-color: var(--success);
+            border-bottom-color: var(--warning);
+            animation: spinReverse 2s linear infinite;
         }
         
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
         
-        @keyframes pulse {
-            0% { transform: scale(0.8); opacity: 0.7; }
-            70% { transform: scale(1.3); opacity: 0; }
-            100% { transform: scale(0.8); opacity: 0; }
+        @keyframes spinReverse {
+            to { transform: rotate(-360deg); }
         }
         
         .loading-text {
@@ -121,15 +126,22 @@
             font-size: 1.2rem;
             margin-top: 20px;
             text-align: center;
-            animation: fadeInOut 2s infinite;
+            position: relative;
         }
         
-        @keyframes fadeInOut {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
+        .loading-text::after {
+            content: '...';
+            position: absolute;
+            animation: dots 1.5s infinite steps(3);
         }
         
-        /* Header with animated slideshow */
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+        
+        /* Header */
         header {
             background-color: var(--secondary);
             color: white;
@@ -137,72 +149,85 @@
             padding: 2rem 0;
             position: relative;
             overflow: hidden;
-            height: 400px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         }
         
-        .hero-slideshow {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-        }
-        
-        .hero-slide {
+        .hero-image {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
-            opacity: 0;
-            transition: opacity 1.5s ease-in-out;
-        }
-        
-        .hero-slide.active {
             opacity: 0.3;
+            z-index: 0;
         }
         
         .header-content {
             position: relative;
             z-index: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100%;
         }
         
         h1 {
             font-size: 3rem;
             margin-bottom: 0.5rem;
             font-weight: 700;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-            position: relative;
-        }
-        
-        h1::after {
-            content: '';
-            display: block;
-            width: 100px;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            margin: 10px auto;
-            border-radius: 2px;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
         
         .tagline {
             font-size: 1.2rem;
             opacity: 0.9;
-            max-width: 600px;
-            margin: 0 auto;
-            line-height: 1.6;
+            font-weight: 300;
+            letter-spacing: 0.5px;
         }
         
-        /* Navigation with subtle animation */
+        /* Photo Carousel */
+        .photo-carousel {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+            margin: 1rem 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .carousel-track {
+            display: flex;
+            width: 500%;
+            height: 100%;
+            animation: carouselScroll 30s linear infinite;
+        }
+        
+        .carousel-slide {
+            width: 20%;
+            height: 100%;
+            flex-shrink: 0;
+        }
+        
+        .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        @keyframes carouselScroll {
+            0% { transform: translateX(0); }
+            20% { transform: translateX(0); }
+            25% { transform: translateX(-20%); }
+            45% { transform: translateX(-20%); }
+            50% { transform: translateX(-40%); }
+            70% { transform: translateX(-40%); }
+            75% { transform: translateX(-60%); }
+            95% { transform: translateX(-60%); }
+            100% { transform: translateX(-80%); }
+        }
+        
+        /* Navigation */
         nav {
-            background-color: white;
+            background-color: var(--white);
             box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
             position: sticky;
             top: 0;
@@ -230,71 +255,38 @@
         
         .nav-item:hover {
             background-color: var(--light);
+            transform: translateY(-2px);
         }
         
         .nav-item.active {
             color: var(--primary);
         }
         
-        .nav-item.active i {
-            color: var(--primary);
-        }
-        
         .nav-item i {
             font-size: 1.5rem;
             margin-bottom: 0.3rem;
-            transition: transform 0.3s ease;
         }
         
-        .nav-item:hover i {
-            transform: translateY(-3px);
-        }
-        
-        .nav-item::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 3px;
-            background-color: var(--primary);
-            transition: width 0.3s ease;
-        }
-        
-        .nav-item.active::after,
-        .nav-item:hover::after {
-            width: 80%;
-        }
-        
-        /* Notification badge */
-        .notification-badge {
+        .nav-item .badge {
             position: absolute;
             top: -5px;
             right: -5px;
             background-color: var(--accent);
             color: white;
             border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            width: 18px;
+            height: 18px;
             font-size: 0.7rem;
-            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
-        /* Container with subtle animation */
+        /* Container */
         .container {
             max-width: 1200px;
             margin: 2rem auto;
             padding: 0 1rem;
-            animation: fadeIn 0.5s ease-out;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
         }
         
         .section-title {
@@ -302,21 +294,21 @@
             margin-bottom: 1.5rem;
             color: var(--secondary);
             position: relative;
-            padding-bottom: 10px;
+            display: inline-block;
         }
         
         .section-title::after {
             content: '';
             position: absolute;
-            bottom: 0;
+            bottom: -8px;
             left: 0;
-            width: 60px;
+            width: 50px;
             height: 3px;
-            background-color: var(--primary);
+            background: linear-gradient(to right, var(--primary), var(--accent));
             border-radius: 3px;
         }
         
-        /* Marketplace grid with hover effects */
+        /* Marketplace */
         .marketplace {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -335,7 +327,7 @@
         
         .photo-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
         }
         
         .photo-thumbnail {
@@ -351,38 +343,34 @@
         
         .photo-details {
             padding: 1.2rem;
-            position: relative;
         }
         
         .photo-title {
             font-weight: 600;
             margin-bottom: 0.5rem;
-            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
         
         .photo-author {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 0.5rem;
             display: flex;
             align-items: center;
-            margin-bottom: 0.8rem;
-            font-size: 0.9rem;
-            color: #666;
-        }
-        
-        .photo-author img {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            margin-right: 8px;
+            gap: 5px;
         }
         
         .pro-badge {
-            background-color: var(--gold);
-            color: var(--dark);
-            font-size: 0.6rem;
-            padding: 2px 6px;
+            background-color: var(--primary);
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
             border-radius: 10px;
-            margin-left: 5px;
-            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
         }
         
         .photo-price {
@@ -392,46 +380,43 @@
             font-size: 1.2rem;
         }
         
-        .photo-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-            margin-bottom: 1rem;
-        }
-        
-        .photo-tag {
-            background-color: var(--light);
-            color: var(--dark);
-            padding: 0.2rem 0.5rem;
-            border-radius: 20px;
-            font-size: 0.7rem;
-        }
-        
         .free-badge {
             background-color: var(--success);
             color: white;
             padding: 0.3rem 0.8rem;
             border-radius: 20px;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             display: inline-block;
+            font-weight: bold;
+        }
+        
+        .photo-stats {
+            display: flex;
+            gap: 1rem;
             margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .photo-stat {
+            display: flex;
+            align-items: center;
+            gap: 3px;
         }
         
         .action-btn {
             display: block;
             width: 100%;
-            padding: 0.6rem;
+            padding: 0.7rem;
             border: none;
             border-radius: 5px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-            text-align: center;
-        }
-        
-        .action-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
         
         .download-btn {
@@ -440,7 +425,8 @@
         }
         
         .download-btn:hover {
-            background-color: #2980b9;
+            background-color: var(--primary-light);
+            transform: translateY(-2px);
         }
         
         .buy-btn {
@@ -449,10 +435,11 @@
         }
         
         .buy-btn:hover {
-            background-color: #c0392b;
+            background-color: var(--accent-light);
+            transform: translateY(-2px);
         }
         
-        /* Upload area with drag and drop */
+        /* Upload Area */
         .upload-area {
             background-color: white;
             border-radius: 10px;
@@ -460,104 +447,37 @@
             margin-bottom: 2rem;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             text-align: center;
-            border: 2px dashed #ddd;
+            border: 2px dashed var(--light);
             transition: all 0.3s ease;
         }
         
         .upload-area:hover {
             border-color: var(--primary);
-            background-color: rgba(52, 152, 219, 0.05);
-        }
-        
-        .upload-area.drag-over {
-            border-color: var(--primary);
-            background-color: rgba(52, 152, 219, 0.1);
+            transform: translateY(-3px);
         }
         
         .upload-btn {
-            background-color: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: white;
             border: none;
-            padding: 0.8rem 1.8rem;
-            border-radius: 30px;
+            padding: 1rem 2rem;
+            border-radius: 50px;
             font-weight: bold;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             gap: 0.8rem;
+            margin: 0 auto;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(52, 152, 219, 0.2);
+            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
         }
         
         .upload-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(52, 152, 219, 0.3);
+            box-shadow: 0 6px 15px rgba(52, 152, 219, 0.4);
         }
         
-        .upload-btn i {
-            font-size: 1.2rem;
-        }
-        
-        .upload-instructions {
-            margin-top: 1rem;
-            color: #666;
-            font-size: 0.9rem;
-        }
-        
-        /* Tag input for manual tagging */
-        .tag-input-container {
-            margin-top: 1rem;
-            text-align: left;
-        }
-        
-        .tag-input-label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: var(--dark);
-        }
-        
-        .tag-input {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            min-height: 44px;
-        }
-        
-        .tag-input:focus-within {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px var(--primary-light);
-        }
-        
-        .tag-input input {
-            flex: 1;
-            border: none;
-            outline: none;
-            padding: 0.3rem;
-            min-width: 100px;
-        }
-        
-        .tag-input .tag {
-            background-color: var(--primary);
-            color: white;
-            padding: 0.3rem 0.6rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-        
-        .tag-input .tag .remove-tag {
-            cursor: pointer;
-            font-size: 0.7rem;
-        }
-        
-        /* Feed with interactive elements */
+        /* Feed */
         .feed {
             display: grid;
             gap: 2rem;
@@ -573,7 +493,7 @@
         
         .feed-post:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
         
         .post-image {
@@ -586,40 +506,45 @@
             display: flex;
             align-items: center;
             padding: 1rem;
-            border-bottom: 1px solid #eee;
+            gap: 10px;
         }
         
-        .post-author {
-            display: flex;
-            align-items: center;
-            flex: 1;
-        }
-        
-        .post-author img {
+        .post-user-avatar {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            margin-right: 10px;
             object-fit: cover;
         }
         
-        .post-author-name {
+        .post-user-name {
             font-weight: 600;
-        }
-        
-        .post-time {
-            color: #999;
-            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
         
         .post-caption {
-            padding: 1rem;
-            line-height: 1.6;
+            padding: 0 1rem 1rem;
+        }
+        
+        .post-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 0.5rem;
+        }
+        
+        .post-tag {
+            background-color: var(--light);
+            color: var(--secondary);
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
         }
         
         .post-actions {
             display: flex;
-            padding: 0.5rem 1rem;
+            padding: 0.8rem 1rem;
             border-top: 1px solid #eee;
         }
         
@@ -629,24 +554,19 @@
             gap: 0.5rem;
             margin-right: 1.5rem;
             cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 5px;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
         
         .post-action:hover {
-            background-color: var(--light);
+            color: var(--primary);
+            transform: scale(1.1);
         }
         
         .post-action.liked {
             color: var(--accent);
         }
         
-        .post-action i {
-            font-size: 1.2rem;
-        }
-        
-        /* Profile section with tabs */
+        /* Profile */
         .profile-header {
             background-color: white;
             border-radius: 10px;
@@ -665,13 +585,8 @@
             left: 0;
             width: 100%;
             height: 100px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, var(--primary), var(--accent));
             z-index: 0;
-        }
-        
-        .profile-content {
-            position: relative;
-            z-index: 1;
         }
         
         .profile-pic {
@@ -679,18 +594,22 @@
             height: 120px;
             border-radius: 50%;
             object-fit: cover;
-            border: 5px solid white;
+            border: 5px solid var(--white);
             margin-bottom: 1rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
         
         .profile-name {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
             display: flex;
-            justify-content: center;
             align-items: center;
-            gap: 0.5rem;
+            justify-content: center;
+            gap: 8px;
         }
         
         .profile-bio {
@@ -699,7 +618,8 @@
             max-width: 500px;
             margin-left: auto;
             margin-right: auto;
-            line-height: 1.6;
+            position: relative;
+            z-index: 1;
         }
         
         .profile-stats {
@@ -707,48 +627,47 @@
             justify-content: center;
             gap: 2rem;
             margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
         }
         
         .stat-item {
             text-align: center;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            transition: all 0.3s ease;
             cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 0.5rem;
+            border-radius: 5px;
         }
         
         .stat-item:hover {
-            background-color: var(--light);
+            background-color: rgba(236, 240, 241, 0.5);
+            transform: translateY(-3px);
         }
         
         .stat-value {
             font-weight: bold;
-            font-size: 1.5rem;
-            color: var(--dark);
+            font-size: 1.3rem;
+            color: var(--secondary);
         }
         
         .stat-label {
             font-size: 0.9rem;
-            color: #666;
+            color: var(--gray);
         }
         
         .member-badge {
-            background: linear-gradient(135deg, var(--gold), #ffcc00);
-            color: var(--dark);
-            padding: 0.4rem 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 0.5rem 1.2rem;
             border-radius: 20px;
             font-size: 0.9rem;
-            display: inline-block;
-            margin-bottom: 1.5rem;
-            font-weight: bold;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        .profile-actions {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-top: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 3px 10px rgba(52, 152, 219, 0.3);
         }
         
         .profile-tabs {
@@ -756,8 +675,9 @@
             border-bottom: 1px solid #ddd;
             margin-bottom: 1.5rem;
             background-color: white;
-            border-radius: 8px 8px 0 0;
+            border-radius: 10px 10px 0 0;
             overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
         
         .profile-tab {
@@ -766,32 +686,35 @@
             border-bottom: 3px solid transparent;
             transition: all 0.3s ease;
             font-weight: 500;
-            color: #666;
-            text-align: center;
-            flex: 1;
+            position: relative;
         }
         
         .profile-tab.active {
             border-bottom-color: var(--primary);
             color: var(--primary);
-            font-weight: 600;
             background-color: rgba(52, 152, 219, 0.05);
         }
         
-        .profile-tab:hover:not(.active) {
-            background-color: var(--light);
+        .profile-tab:hover {
+            background-color: rgba(52, 152, 219, 0.1);
         }
         
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.5s ease;
+        .profile-tab .badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: var(--accent);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
-        .tab-content.active {
-            display: block;
-        }
-        
-        /* About section */
+        /* About Section */
         .about-section {
             background-color: white;
             border-radius: 10px;
@@ -804,11 +727,11 @@
         }
         
         .about-content p {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
         }
         
         .about-content h3 {
-            margin: 2rem 0 1rem 0;
+            margin: 1.5rem 0 1rem;
             color: var(--secondary);
             position: relative;
             padding-bottom: 5px;
@@ -826,7 +749,7 @@
         
         .about-content ul {
             margin-left: 1.5rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
         }
         
         .about-content li {
@@ -843,14 +766,14 @@
             margin-left: -1em;
         }
         
-        /* Modals with animations */
+        /* Modals */
         .modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.7);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -871,9 +794,9 @@
             border-radius: 10px;
             padding: 2rem;
             width: 90%;
-            max-width: 500px;
+            max-width: 450px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            transform: translateY(-50px);
+            transform: translateY(-30px);
             transition: all 0.3s ease;
             position: relative;
             max-height: 90vh;
@@ -884,18 +807,19 @@
             transform: translateY(0);
         }
         
-        .close-modal {
+        .modal-close {
             position: absolute;
             top: 15px;
             right: 15px;
             font-size: 1.5rem;
             cursor: pointer;
-            color: #666;
-            transition: color 0.3s ease;
+            color: var(--gray);
+            transition: all 0.2s ease;
         }
         
-        .close-modal:hover {
+        .modal-close:hover {
             color: var(--accent);
+            transform: rotate(90deg);
         }
         
         .modal-title {
@@ -910,7 +834,7 @@
             color: white;
             border: none;
             padding: 0.8rem 1.5rem;
-            border-radius: 30px;
+            border-radius: 50px;
             font-weight: bold;
             cursor: pointer;
             display: flex;
@@ -921,12 +845,13 @@
             justify-content: center;
             margin-bottom: 1rem;
             transition: all 0.3s ease;
-            box-shadow: 0 3px 6px rgba(66, 133, 244, 0.2);
+            box-shadow: 0 3px 10px rgba(66, 133, 244, 0.3);
         }
         
         .google-login-btn:hover {
+            background-color: #357ABD;
             transform: translateY(-2px);
-            box-shadow: 0 5px 10px rgba(66, 133, 244, 0.3);
+            box-shadow: 0 5px 15px rgba(66, 133, 244, 0.4);
         }
         
         .google-icon {
@@ -936,25 +861,15 @@
         
         .modal-text {
             text-align: center;
-            color: #666;
+            color: var(--gray);
             font-size: 0.9rem;
             margin-bottom: 1.5rem;
         }
         
-        .modal-text a {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 500;
-        }
-        
-        .modal-text a:hover {
-            text-decoration: underline;
-        }
-        
-        /* Subscription options */
+        /* Subscription Options */
         .subscription-options {
             display: grid;
-            gap: 1.5rem;
+            gap: 1.2rem;
             margin-top: 1.5rem;
         }
         
@@ -970,51 +885,49 @@
         
         .subscription-card:hover {
             border-color: var(--primary);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            transform: translateY(-5px);
         }
         
         .subscription-card.selected {
             border-color: var(--primary);
             background-color: rgba(52, 152, 219, 0.05);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.2);
         }
         
-        .subscription-card.popular::before {
+        .subscription-card.popular::after {
             content: 'Most Popular';
             position: absolute;
             top: 10px;
             right: -30px;
-            background-color: var(--gold);
-            color: var(--dark);
+            background-color: var(--accent);
+            color: white;
             padding: 0.2rem 2rem;
-            font-size: 0.7rem;
-            font-weight: bold;
+            font-size: 0.8rem;
             transform: rotate(45deg);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 120px;
+            text-align: center;
         }
         
         .subscription-title {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             margin-bottom: 0.5rem;
             color: var(--secondary);
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .subscription-title i {
-            color: var(--gold);
+            gap: 8px;
         }
         
         .subscription-price {
             font-size: 1.8rem;
             font-weight: bold;
             margin-bottom: 0.5rem;
-            color: var(--dark);
+            color: var(--secondary);
         }
         
         .subscription-price span {
             font-size: 1rem;
-            color: #666;
+            color: var(--gray);
             font-weight: normal;
         }
         
@@ -1026,88 +939,231 @@
         .subscription-features li {
             margin-bottom: 0.8rem;
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             gap: 0.8rem;
-            font-size: 0.9rem;
+            position: relative;
+            padding-left: 0;
         }
         
-        .subscription-features li i {
+        .subscription-features li::before {
+            content: "✓";
             color: var(--success);
-            font-size: 0.9rem;
-            margin-top: 2px;
+            font-weight: bold;
         }
         
         .subscribe-btn {
-            background-color: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: white;
             border: none;
             padding: 0.8rem;
-            border-radius: 30px;
+            border-radius: 50px;
             font-weight: bold;
             cursor: pointer;
             width: 100%;
             transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(52, 152, 219, 0.3);
         }
         
         .subscribe-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 3px 10px rgba(52, 152, 219, 0.3);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
         }
         
-        /* Notification system */
-        .notification-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1100;
+        /* Upload Modal */
+        .upload-modal-content {
+            max-width: 500px;
+        }
+        
+        .upload-preview {
+            width: 100%;
+            max-height: 300px;
+            object-fit: contain;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--secondary);
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            outline: none;
+        }
+        
+        .tag-input-container {
             display: flex;
-            flex-direction: column;
-            gap: 10px;
-            max-width: 350px;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
         }
         
+        .tag-item {
+            background-color: var(--light);
+            color: var(--secondary);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .tag-remove {
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+        
+        .tag-input {
+            flex: 1;
+            min-width: 100px;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .modal-btn {
+            flex: 1;
+            padding: 0.8rem;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-btn.primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+        }
+        
+        .modal-btn.primary:hover {
+            background-color: var(--primary-light);
+        }
+        
+        .modal-btn.secondary {
+            background-color: white;
+            color: var(--secondary);
+            border: 1px solid #ddd;
+        }
+        
+        .modal-btn.secondary:hover {
+            background-color: var(--light);
+        }
+        
+        /* Admin Panel */
+        .admin-controls {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .admin-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .admin-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .admin-btn {
+            padding: 0.6rem 1rem;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .admin-btn.notify-all {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .admin-btn.notify-all:hover {
+            background-color: var(--primary-light);
+        }
+        
+        .admin-btn.manage-users {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .admin-btn.manage-users:hover {
+            background-color: #27ae60;
+        }
+        
+        .admin-btn.moderate {
+            background-color: var(--warning);
+            color: white;
+        }
+        
+        .admin-btn.moderate:hover {
+            background-color: #e67e22;
+        }
+        
+        /* Notification */
         .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
             background-color: white;
             border-radius: 8px;
             padding: 1rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             gap: 1rem;
-            transform: translateX(100%);
-            opacity: 0;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            z-index: 1001;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+            max-width: 350px;
         }
         
         .notification.show {
             transform: translateX(0);
-            opacity: 1;
         }
         
-        .notification::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background-color: var(--primary);
-            animation: notificationProgress 5s linear forwards;
-        }
-        
-        @keyframes notificationProgress {
-            from { width: 100%; }
-            to { width: 0%; }
-        }
-        
-        .notification i {
+        .notification-icon {
             font-size: 1.5rem;
-            color: var(--primary);
+            color: var(--success);
         }
         
-        .notification-info {
+        .notification-error .notification-icon {
+            color: var(--accent);
+        }
+        
+        .notification-content {
             flex: 1;
         }
         
@@ -1116,395 +1172,110 @@
             margin-bottom: 0.3rem;
         }
         
-        .notification-message {
-            font-size: 0.9rem;
-            color: #666;
-        }
-        
         .notification-close {
-            color: #999;
             cursor: pointer;
-            font-size: 1rem;
-            transition: color 0.3s ease;
+            color: var(--gray);
         }
         
-        .notification-close:hover {
-            color: var(--accent);
-        }
-        
-        /* Admin controls */
-        .admin-controls {
-            background-color: white;
-            border-radius: 10px;
-            padding: 2rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            margin-bottom: 2rem;
-        }
-        
-        .admin-section-title {
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
-            color: var(--secondary);
-            border-bottom: 2px solid var(--primary);
-            padding-bottom: 0.5rem;
-        }
-        
-        .admin-form-group {
-            margin-bottom: 1.5rem;
-        }
-        
-        .admin-form-label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-        
-        .admin-form-input {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
-        
-        .admin-form-input:focus {
-            border-color: var(--primary);
-            outline: none;
-            box-shadow: 0 0 0 2px var(--primary-light);
-        }
-        
-        .admin-form-textarea {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-            min-height: 100px;
-            resize: vertical;
-        }
-        
-        .admin-form-select {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-            background-color: white;
-        }
-        
-        .admin-btn {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 5px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .admin-btn:hover {
-            background-color: #2980b9;
-        }
-        
-        .admin-btn.danger {
-            background-color: var(--accent);
-        }
-        
-        .admin-btn.danger:hover {
-            background-color: #c0392b;
-        }
-        
-        .admin-btn-group {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-        
-        /* Monetization application */
-        .monetize-card {
-            background-color: white;
-            border-radius: 10px;
-            padding: 2rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-        
-        .monetize-title {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--secondary);
-        }
-        
-        .monetize-requirements {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        
-        .requirement-card {
-            background-color: var(--light);
-            border-radius: 8px;
-            padding: 1.5rem;
-            text-align: center;
-        }
-        
-        .requirement-value {
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-        }
-        
-        .requirement-label {
-            font-size: 0.9rem;
-            color: #666;
-        }
-        
-        .requirement-completed {
-            color: var(--success);
-            font-weight: bold;
-            margin-top: 0.5rem;
-        }
-        
-        .monetize-btn {
-            background-color: var(--success);
-            color: white;
-            border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 30px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .monetize-btn:hover {
-            background-color: #27ae60;
-            transform: translateY(-2px);
-            box-shadow: 0 3px 10px rgba(46, 204, 113, 0.3);
-        }
-        
-        .monetize-btn:disabled {
-            background-color: #95a5a6;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-        
-        /* Footer with animation */
+        /* Footer */
         footer {
             background-color: var(--secondary);
             color: white;
             text-align: center;
-            padding: 3rem 0;
+            padding: 2rem 0;
             margin-top: 3rem;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        footer::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('https://source.unsplash.com/random/1600x900/?photography') center/cover;
-            opacity: 0.1;
-            z-index: 0;
-        }
-        
-        .footer-content {
-            position: relative;
-            z-index: 1;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1rem;
-        }
-        
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-        }
-        
-        .footer-link {
-            color: white;
-            text-decoration: none;
-            transition: color 0.3s ease;
-            position: relative;
-        }
-        
-        .footer-link:hover {
-            color: var(--primary);
-        }
-        
-        .footer-link::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background-color: var(--primary);
-            transition: width 0.3s ease;
-        }
-        
-        .footer-link:hover::after {
-            width: 100%;
         }
         
         .footer-text {
             opacity: 0.7;
             font-size: 0.9rem;
-            margin-top: 1rem;
         }
         
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            margin-top: 1.5rem;
-        }
-        
-        .social-link {
-            color: white;
-            font-size: 1.5rem;
-            transition: all 0.3s ease;
-        }
-        
-        .social-link:hover {
-            color: var(--primary);
-            transform: translateY(-3px);
-        }
-        
-        /* Responsive adjustments */
-        @media (max-width: 992px) {
-            header {
-                height: 350px;
-            }
-            
-            h1 {
-                font-size: 2.5rem;
-            }
-            
-            .marketplace {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            }
-        }
-        
+        /* Responsive */
         @media (max-width: 768px) {
-            header {
-                height: 300px;
-                padding: 1.5rem 0;
-            }
-            
             h1 {
                 font-size: 2rem;
             }
             
-            .tagline {
-                font-size: 1rem;
-            }
-            
             .nav-container {
                 flex-wrap: wrap;
-                gap: 0.5rem;
             }
             
             .nav-item {
                 padding: 0.5rem;
                 font-size: 0.8rem;
+                flex: 1 0 20%;
             }
             
             .nav-item i {
                 font-size: 1.2rem;
             }
             
+            .marketplace {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+            
             .profile-stats {
                 gap: 1rem;
             }
             
-            .stat-value {
-                font-size: 1.2rem;
-            }
-            
             .profile-tabs {
-                flex-wrap: wrap;
+                overflow-x: auto;
+                white-space: nowrap;
+                display: block;
             }
             
             .profile-tab {
-                flex: none;
-                padding: 0.8rem 1rem;
+                display: inline-block;
             }
             
-            .subscription-options {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        @media (max-width: 576px) {
-            header {
-                height: 250px;
-            }
-            
-            .modal-content {
-                padding: 1.5rem;
-            }
-            
-            .profile-header {
-                padding: 1.5rem;
-            }
-            
-            .profile-name {
-                font-size: 1.5rem;
-            }
-            
-            .profile-stats {
+            .admin-actions {
                 flex-direction: column;
-                gap: 0.5rem;
-            }
-            
-            .stat-item {
-                padding: 0.5rem;
-            }
-            
-            .monetize-requirements {
-                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Animated background glow -->
+    <!-- Background Glow Effect -->
     <div class="glow-effect"></div>
     
     <!-- Loading Screen -->
     <div class="loading-screen">
         <div class="loading-spinner"></div>
-        <div class="loading-text">Loading your visual journey...</div>
+        <div class="loading-text">Loading your visual journey</div>
     </div>
     
-    <!-- Notification Container -->
-    <div class="notification-container" id="notification-container"></div>
-    
-    <!-- Header with Slideshow -->
+    <!-- Header -->
     <header>
-        <div class="hero-slideshow" id="hero-slideshow">
-            <!-- Slides will be added by JavaScript -->
-        </div>
+        <img src="https://source.unsplash.com/random/1600x900/?photography" alt="Hero Image" class="hero-image">
         <div class="header-content">
             <h1>Amir'O Graphy</h1>
-            <p class="tagline">Capturing moments, creating memories, connecting photographers worldwide</p>
+            <p class="tagline">Capturing moments, creating memories</p>
         </div>
     </header>
+    
+    <!-- Photo Carousel -->
+    <div class="container">
+        <div class="photo-carousel">
+            <div class="carousel-track">
+                <div class="carousel-slide">
+                    <img src="https://source.unsplash.com/random/800x400/?nature" alt="Nature">
+                </div>
+                <div class="carousel-slide">
+                    <img src="https://source.unsplash.com/random/800x400/?portrait" alt="Portrait">
+                </div>
+                <div class="carousel-slide">
+                    <img src="https://source.unsplash.com/random/800x400/?city" alt="City">
+                </div>
+                <div class="carousel-slide">
+                    <img src="https://source.unsplash.com/random/800x400/?wildlife" alt="Wildlife">
+                </div>
+                <div class="carousel-slide">
+                    <img src="https://source.unsplash.com/random/800x400/?travel" alt="Travel">
+                </div>
+            </div>
+        </div>
+    </div>
     
     <!-- Navigation -->
     <nav>
@@ -1519,17 +1290,16 @@
             </div>
             <div class="nav-item" onclick="showSection('feed')">
                 <i class="fas fa-images"></i>
-                <span>Community</span>
-                <div class="notification-badge" id="feed-notification" style="display: none;">0</div>
+                <span>Daily Feed</span>
+                <div class="badge">3</div>
             </div>
             <div class="nav-item" onclick="showSection('profile')">
                 <i class="fas fa-user"></i>
                 <span>Profile</span>
-                <div class="notification-badge" id="profile-notification" style="display: none;">0</div>
             </div>
             <div class="nav-item" onclick="showSection('about')">
                 <i class="fas fa-info-circle"></i>
-                <span>About</span>
+                <span>About Us</span>
             </div>
         </div>
     </nav>
@@ -1538,29 +1308,27 @@
     <div class="container">
         <!-- Home Section -->
         <section id="home-section">
-            <h2 class="section-title">Featured Photos</h2>
-            <p>Discover stunning photography from our talented community members.</p>
+            <h2 class="section-title">Welcome to Amir'O Graphy</h2>
+            <p>Discover stunning photography and share your own visual stories with our community.</p>
             
-            <div class="marketplace" id="featured-photos">
+            <div class="marketplace" id="featured-photos" style="margin-top: 2rem;">
                 <!-- Featured photos will be loaded here -->
             </div>
             
-            <div style="text-align: center; margin-top: 2rem;">
-                <button class="upload-btn" onclick="showSection('feed')">
-                    <i class="fas fa-upload"></i> Share Your Photos
-                </button>
-            </div>
+            <button class="upload-btn" onclick="showSection('feed')">
+                <i class="fas fa-upload"></i> Upload Your Photo
+            </button>
         </section>
         
         <!-- Marketplace Section -->
         <section id="marketplace-section" style="display: none;">
-            <h2 class="section-title">Photo Marketplace</h2>
+            <h2 class="section-title">Marketplace</h2>
             <p>Browse and purchase premium photos or download free selections.</p>
             
-            <div class="filter-options" style="margin: 1.5rem 0; display: flex; gap: 0.5rem;">
-                <button class="action-btn" onclick="filterPhotos('all')" style="flex: 1;">All Photos</button>
-                <button class="action-btn" onclick="filterPhotos('free')" style="flex: 1;">Free Downloads</button>
-                <button class="action-btn" onclick="filterPhotos('premium')" style="flex: 1;">Premium Content</button>
+            <div class="filter-options" style="margin: 1.5rem 0; display: flex; gap: 0.8rem;">
+                <button class="action-btn" style="background-color: var(--secondary);" onclick="filterPhotos('all')">All</button>
+                <button class="action-btn" style="background-color: var(--success);" onclick="filterPhotos('free')">Free</button>
+                <button class="action-btn" style="background-color: var(--primary);" onclick="filterPhotos('premium')">Premium</button>
             </div>
             
             <div class="marketplace" id="marketplace-photos">
@@ -1568,21 +1336,13 @@
             </div>
         </section>
         
-        <!-- Community Feed Section -->
+        <!-- Daily Feed Section -->
         <section id="feed-section" style="display: none;">
-            <div class="upload-area" id="upload-area">
+            <div class="upload-area">
                 <input type="file" id="photo-upload" accept="image/*" style="display: none;">
                 <button class="upload-btn" onclick="document.getElementById('photo-upload').click()">
                     <i class="fas fa-plus"></i> Upload Photo
                 </button>
-                <p class="upload-instructions">Drag & drop photos here or click to browse</p>
-                
-                <div class="tag-input-container" id="tag-input-container" style="display: none;">
-                    <label class="tag-input-label">Add tags (comma separated):</label>
-                    <div class="tag-input" id="tag-input">
-                        <input type="text" id="tag-text-input" placeholder="nature, landscape, sunset...">
-                    </div>
-                </div>
             </div>
             
             <h2 class="section-title">Community Feed</h2>
@@ -1598,96 +1358,46 @@
                 <!-- Loaded via JavaScript -->
             </div>
             
-            <!-- Monetization Application -->
-            <div class="monetize-card" id="monetize-card" style="display: none;">
-                <h3 class="monetize-title">Monetize Your Photography</h3>
-                <p style="margin-bottom: 1.5rem;">Reach these requirements to apply for monetization:</p>
-                
-                <div class="monetize-requirements">
-                    <div class="requirement-card">
-                        <div class="requirement-value" id="likes-count">0</div>
-                        <div class="requirement-label">Likes</div>
-                        <div class="requirement-completed" id="likes-status">Not reached</div>
-                    </div>
-                    <div class="requirement-card">
-                        <div class="requirement-value" id="comments-count">0</div>
-                        <div class="requirement-label">Comments</div>
-                        <div class="requirement-completed" id="comments-status">Not reached</div>
-                    </div>
-                </div>
-                
-                <button class="monetize-btn" id="apply-monetize-btn" disabled onclick="applyForMonetization()">
-                    <i class="fas fa-check-circle"></i> Apply for Monetization
-                </button>
-            </div>
-            
-            <!-- Admin Controls (visible only to admin) -->
-            <div class="admin-controls" id="admin-controls" style="display: none;">
-                <h3 class="admin-section-title">Admin Dashboard</h3>
-                
-                <div class="admin-form-group">
-                    <label class="admin-form-label">Send Notification</label>
-                    <select class="admin-form-select" id="notification-recipient">
-                        <option value="all">All Users</option>
-                        <option value="specific">Specific User</option>
-                    </select>
-                </div>
-                
-                <div class="admin-form-group" id="specific-user-group" style="display: none;">
-                    <label class="admin-form-label">User Email</label>
-                    <input type="email" class="admin-form-input" id="user-email" placeholder="user@example.com">
-                </div>
-                
-                <div class="admin-form-group">
-                    <label class="admin-form-label">Notification Title</label>
-                    <input type="text" class="admin-form-input" id="notification-title" placeholder="Important Update">
-                </div>
-                
-                <div class="admin-form-group">
-                    <label class="admin-form-label">Notification Message</label>
-                    <textarea class="admin-form-textarea" id="notification-message" placeholder="Enter your message here..."></textarea>
-                </div>
-                
-                <div class="admin-btn-group">
-                    <button class="admin-btn" onclick="sendNotification()">
-                        <i class="fas fa-paper-plane"></i> Send Notification
-                    </button>
-                    <button class="admin-btn danger" onclick="clearAdminForm()">
-                        <i class="fas fa-times"></i> Clear
-                    </button>
-                </div>
-            </div>
-            
             <div class="profile-tabs">
                 <div class="profile-tab active" onclick="switchTab('uploads')">My Uploads</div>
                 <div class="profile-tab" onclick="switchTab('favorites')">Favorites</div>
                 <div class="profile-tab" onclick="switchTab('purchased')">Purchased</div>
-                <div class="profile-tab" onclick="switchTab('monetization')" id="monetization-tab" style="display: none;">Monetization</div>
+                <div class="profile-tab" onclick="switchTab('monetization')">Monetization</div>
             </div>
             
-            <div id="uploads-tab" class="tab-content active">
+            <div id="uploads-tab">
                 <div class="marketplace" id="user-uploads">
                     <!-- User's photos loaded via JavaScript -->
                 </div>
             </div>
             
-            <div id="favorites-tab" class="tab-content">
-                <div class="marketplace" id="user-favorites">
-                    <p style="text-align: center; padding: 2rem;">Your favorite photos will appear here.</p>
-                </div>
+            <div id="favorites-tab" style="display: none;">
+                <p>Your favorite photos will appear here.</p>
             </div>
             
-            <div id="purchased-tab" class="tab-content">
-                <div class="marketplace" id="user-purchased">
-                    <p style="text-align: center; padding: 2rem;">Photos you've purchased will appear here.</p>
-                </div>
+            <div id="purchased-tab" style="display: none;">
+                <p>Photos you've purchased will appear here.</p>
             </div>
             
-            <div id="monetization-tab-content" class="tab-content">
+            <div id="monetization-tab" style="display: none;">
                 <div class="about-section">
-                    <h3 class="section-title">Monetization Dashboard</h3>
-                    <div class="about-content" id="monetization-content">
-                        <p>Your monetization application is pending approval.</p>
+                    <h3>Monetization Status</h3>
+                    <div id="monetization-status">
+                        <!-- Loaded via JavaScript -->
+                    </div>
+                    
+                    <div id="apply-monetization" style="margin-top: 1.5rem; display: none;">
+                        <button class="action-btn" style="background-color: var(--success);" onclick="applyForMonetization()">
+                            <i class="fas fa-dollar-sign"></i> Apply for Monetization
+                        </button>
+                    </div>
+                    
+                    <div id="sell-photos" style="margin-top: 1.5rem; display: none;">
+                        <h3>Sell Your Photos</h3>
+                        <p>Set a price for your approved photos to start earning.</p>
+                        <div id="approved-photos" class="marketplace">
+                            <!-- Approved photos for sale will appear here -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1698,29 +1408,23 @@
             <div class="about-section">
                 <h2 class="section-title">About Amir'O Graphy</h2>
                 <div class="about-content">
-                    <p>Welcome to Amir'O Graphy, a platform dedicated to photographers and visual storytellers. Our mission is to create a vibrant community where artists can share their work, gain exposure, and monetize their creativity while connecting with like-minded individuals.</p>
+                    <p>Welcome to Amir'O Graphy, a platform dedicated to photographers and visual storytellers. Our mission is to create a community where artists can share their work, gain exposure, and monetize their creativity.</p>
                     
                     <h3>Subscription Plans</h3>
-                    <p>We offer different membership levels to suit your needs:</p>
+                    <p>We offer different subscription levels to cater to your needs:</p>
                     <ul>
-                        <li><strong>Free Members:</strong> Can upload 2 photos per day and download 1 photo daily</li>
-                        <li><strong>Explorer ($2.99/month):</strong> Upload 5 photos per day and download 5 photos daily</li>
-                        <li><strong>Unlimited ($7.99/month):</strong> Unlimited uploads and downloads, plus premium features</li>
+                        <li><strong>Free Plan:</strong> Upload 2 photos per day, download 1 photo per day</li>
+                        <li><strong>Explorer ($2.99/month):</strong> Upload 5 photos per day, download 5 photos per day</li>
+                        <li><strong>Unlimited ($7.99/month):</strong> Unlimited uploads and downloads, PRO badge, early monetization</li>
                     </ul>
                     
-                    <h3>Monetization Program</h3>
-                    <p>Our monetization program allows photographers to earn from their work:</p>
+                    <h3>Monetization Guidelines</h3>
+                    <p>Earn money from your photos by meeting these requirements:</p>
                     <ul>
-                        <li><strong>Free Members:</strong> Need 100 likes and 20 comments to apply</li>
-                        <li><strong>Subscribers:</strong> Need 50 likes and 10 comments to apply</li>
-                        <li>After approval, you can set prices for your photos (subject to admin review)</li>
-                        <li>Earnings are paid out monthly via your preferred method</li>
+                        <li><strong>Free Users:</strong> 100 loves and 20 comments on your photos</li>
+                        <li><strong>PRO Users:</strong> 50 loves and 10 comments on your photos</li>
                     </ul>
-                    
-                    <h3>Copyright Guidelines</h3>
-                    <p>All photographs displayed on this platform are the intellectual property of their respective creators. Unauthorized use, reproduction, or distribution of these images without explicit permission is strictly prohibited.</p>
-                    
-                    <p>When you purchase a photo through Amir'O Graphy, you're acquiring specific usage rights as outlined in our licensing agreements. Full copyright transfer requires a separate agreement with the photographer.</p>
+                    <p>Once approved, you can set prices for your photos and earn 70% of each sale.</p>
                     
                     <h3>Community Guidelines</h3>
                     <p>We encourage respectful engagement within our community. Please:</p>
@@ -1731,7 +1435,44 @@
                         <li>Report any inappropriate content</li>
                     </ul>
                     
-                    <p>For licensing inquiries, copyright issues, or monetization questions, please contact us at <strong>ahamed.to.tipak@gmail.com</strong>.</p>
+                    <p>For licensing inquiries or copyright issues, please contact us at <strong>copyright@amirography.com</strong>.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Admin Section (only visible to admin) -->
+        <section id="admin-section" style="display: none;">
+            <div class="admin-controls">
+                <h3 class="admin-title"><i class="fas fa-shield-alt"></i> Admin Panel</h3>
+                
+                <div class="admin-actions">
+                    <button class="admin-btn notify-all" onclick="notifyAllUsers()">
+                        <i class="fas fa-bell"></i> Notify All Users
+                    </button>
+                    <button class="admin-btn manage-users" onclick="manageUsers()">
+                        <i class="fas fa-users-cog"></i> Manage Users
+                    </button>
+                    <button class="admin-btn moderate" onclick="moderateContent()">
+                        <i class="fas fa-flag"></i> Moderate Content
+                    </button>
+                </div>
+                
+                <div id="admin-notification-form" style="display: none; margin-top: 1.5rem;">
+                    <div class="form-group">
+                        <label class="form-label">Notification Message</label>
+                        <textarea class="form-input" id="notification-message" rows="3"></textarea>
+                    </div>
+                    <button class="action-btn" style="background-color: var(--primary);" onclick="sendNotification()">
+                        <i class="fas fa-paper-plane"></i> Send Notification
+                    </button>
+                </div>
+                
+                <div id="admin-user-list" style="display: none; margin-top: 1.5rem;">
+                    <!-- User list will be loaded here -->
+                </div>
+                
+                <div id="admin-content-moderation" style="display: none; margin-top: 1.5rem;">
+                    <!-- Content for moderation will be loaded here -->
                 </div>
             </div>
         </section>
@@ -1740,7 +1481,7 @@
     <!-- Login Modal -->
     <div class="modal" id="login-modal">
         <div class="modal-content">
-            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <span class="modal-close" onclick="closeModal()">&times;</span>
             <h3 class="modal-title">Sign In to Continue</h3>
             <button class="google-login-btn" id="google-login">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" class="google-icon">
@@ -1753,19 +1494,19 @@
     <!-- Subscription Modal -->
     <div class="modal" id="subscription-modal">
         <div class="modal-content">
-            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <span class="modal-close" onclick="closeModal()">&times;</span>
             <h3 class="modal-title">Upgrade Your Membership</h3>
-            <p class="modal-text">Choose the plan that works best for you and unlock more features.</p>
+            <p class="modal-text" style="margin-bottom: 1.5rem;">Choose the plan that works best for you:</p>
             
             <div class="subscription-options">
                 <div class="subscription-card" onclick="selectPlan('explorer')" id="explorer-plan">
                     <h4 class="subscription-title">Explorer</h4>
                     <div class="subscription-price">$2.99<span>/month</span></div>
                     <ul class="subscription-features">
-                        <li><i class="fas fa-check"></i> 5 daily uploads</li>
-                        <li><i class="fas fa-check"></i> 5 daily downloads</li>
-                        <li><i class="fas fa-check"></i> Access to free content</li>
-                        <li><i class="fas fa-check"></i> Basic support</li>
+                        <li>5 daily uploads</li>
+                        <li>5 daily downloads</li>
+                        <li>Access to free content</li>
+                        <li>Basic support</li>
                     </ul>
                     <button class="subscribe-btn" onclick="subscribe('explorer')">Select Plan</button>
                 </div>
@@ -1774,58 +1515,69 @@
                     <h4 class="subscription-title">Unlimited</h4>
                     <div class="subscription-price">$7.99<span>/month</span></div>
                     <ul class="subscription-features">
-                        <li><i class="fas fa-check"></i> Unlimited uploads</li>
-                        <li><i class="fas fa-check"></i> Unlimited downloads</li>
-                        <li><i class="fas fa-check"></i> Access to premium content</li>
-                        <li><i class="fas fa-check"></i> Priority support</li>
-                        <li><i class="fas fa-check"></i> Early monetization</li>
-                        <li><i class="fas fa-check"></i> Exclusive tutorials</li>
+                        <li>Unlimited uploads</li>
+                        <li>Unlimited downloads</li>
+                        <li>Access to premium content</li>
+                        <li>PRO badge</li>
+                        <li>Early monetization</li>
+                        <li>Priority support</li>
                     </ul>
                     <button class="subscribe-btn" onclick="subscribe('unlimited')">Select Plan</button>
                 </div>
             </div>
-            
-            <p class="modal-text" style="margin-top: 1rem;">Cancel anytime. No hidden fees.</p>
         </div>
     </div>
     
-    <!-- Price Setting Modal -->
-    <div class="modal" id="price-modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeModal()">&times;</span>
-            <h3 class="modal-title">Set Photo Price</h3>
+    <!-- Upload Modal -->
+    <div class="modal" id="upload-modal">
+        <div class="modal-content upload-modal-content">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <h3 class="modal-title">Upload Photo</h3>
             
-            <div style="margin-bottom: 1.5rem;">
-                <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Price in USD</label>
-                <input type="number" id="photo-price" min="0" step="0.99" class="admin-form-input" placeholder="0.00" style="width: 100%;">
+            <img id="upload-preview" class="upload-preview" alt="Preview">
+            
+            <div class="form-group">
+                <label class="form-label">Photo Title</label>
+                <input type="text" class="form-input" id="photo-title" placeholder="Give your photo a title">
             </div>
             
-            <button class="subscribe-btn" onclick="setPhotoPrice()">Set Price</button>
-            <button class="action-btn" style="background-color: #95a5a6; margin-top: 0.5rem;" onclick="setPhotoPrice(0)">Mark as Free</button>
+            <div class="form-group">
+                <label class="form-label">Tags (Add up to 5 tags)</label>
+                <div class="tag-input-container" id="tags-container">
+                    <!-- Tags will be added here -->
+                </div>
+                <input type="text" class="form-input tag-input" id="tag-input" placeholder="Add tags (press enter to add)">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Price (Leave 0 for free)</label>
+                <input type="number" class="form-input" id="photo-price" min="0" step="0.01" placeholder="0.00">
+            </div>
+            
+            <div class="modal-actions">
+                <button class="modal-btn secondary" onclick="closeModal()">Cancel</button>
+                <button class="modal-btn primary" onclick="uploadPhoto()">Upload</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <div class="notification-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="notification-content">
+            <div class="notification-title">Success</div>
+            <div class="notification-message">Your action was completed successfully</div>
+        </div>
+        <div class="notification-close" onclick="hideNotification()">
+            <i class="fas fa-times"></i>
         </div>
     </div>
     
     <!-- Footer -->
     <footer>
-        <div class="footer-content">
-            <div class="footer-links">
-                <a href="#" class="footer-link" onclick="showSection('about')">About Us</a>
-                <a href="#" class="footer-link" onclick="showSection('marketplace')">Marketplace</a>
-                <a href="#" class="footer-link" onclick="showSection('feed')">Community</a>
-                <a href="#" class="footer-link">Terms of Service</a>
-                <a href="#" class="footer-link">Privacy Policy</a>
-                <a href="mailto:ahamed.to.tipak@gmail.com" class="footer-link">Contact</a>
-            </div>
-            
-            <div class="social-links">
-                <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
-                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                <a href="#" class="social-link"><i class="fab fa-pinterest"></i></a>
-            </div>
-            
-            <p class="footer-text">© <span id="current-year"></span> Amir'O Graphy. All rights reserved.</p>
-        </div>
+        <p class="footer-text">© <span id="current-year"></span> Amir'O Graphy. All rights reserved.</p>
     </footer>
 
     <!-- Firebase SDKs -->
@@ -1853,10 +1605,10 @@
             query,
             where,
             orderBy,
-            limit,
             arrayUnion,
             arrayRemove,
-            increment
+            increment,
+            limit
         } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { 
             getStorage,
@@ -1865,6 +1617,10 @@
             getDownloadURL,
             deleteObject
         } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+        import { 
+            getFunctions, 
+            httpsCallable 
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-functions.js";
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -1883,250 +1639,788 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
         const storage = getStorage(app);
+        const functions = getFunctions(app);
         const provider = new GoogleAuthProvider();
 
         // DOM Elements
         const googleLoginBtn = document.getElementById('google-login');
         const photoUploadInput = document.getElementById('photo-upload');
         const currentYearSpan = document.getElementById('current-year');
-        const uploadArea = document.getElementById('upload-area');
-        const tagInputContainer = document.getElementById('tag-input-container');
-        const tagInput = document.getElementById('tag-input');
-        const tagTextInput = document.getElementById('tag-text-input');
-
-        // Global Variables
-        let currentUser = null;
-        let currentPhotoId = null;
-        let selectedTags = [];
-        let adminEmail = "ahamed.to.tipak@gmail.com";
+        const notification = document.getElementById('notification');
 
         // Set current year in footer
         currentYearSpan.textContent = new Date().getFullYear();
 
+        // Global Variables
+        let currentUser = null;
+        let currentUserData = null;
+        let photos = [];
+        let posts = [];
+        let tags = [];
+        let selectedFile = null;
+
         // ========================================
-        // PHOTO UPLOAD WITH MANUAL TAGGING
+        // NOTIFICATION FUNCTIONS
         // ========================================
 
-        // Handle drag and drop
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.classList.add('drag-over');
-        });
-
-        uploadArea.addEventListener('dragleave', () => {
-            uploadArea.classList.remove('drag-over');
-        });
-
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.classList.remove('drag-over');
-            if (e.dataTransfer.files.length) {
-                photoUploadInput.files = e.dataTransfer.files;
-                handlePhotoUpload({ target: photoUploadInput });
+        function showNotification(title, message, isError = false) {
+            const notification = document.getElementById('notification');
+            notification.querySelector('.notification-title').textContent = title;
+            notification.querySelector('.notification-message').textContent = message;
+            
+            if (isError) {
+                notification.classList.add('notification-error');
+            } else {
+                notification.classList.remove('notification-error');
             }
-        });
-
-        // Handle tag input
-        tagTextInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ',') {
-                e.preventDefault();
-                const tag = tagTextInput.value.trim();
-                if (tag) {
-                    addTag(tag);
-                    tagTextInput.value = '';
-                }
-            }
-        });
-
-        function addTag(tag) {
-            if (!selectedTags.includes(tag) {
-                selectedTags.push(tag);
-                renderTags();
-            }
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                hideNotification();
+            }, 5000);
         }
 
-        function removeTag(tag) {
-            selectedTags = selectedTags.filter(t => t !== tag);
-            renderTags();
+        function hideNotification() {
+            document.getElementById('notification').classList.remove('show');
         }
 
-        function renderTags() {
-            tagInput.innerHTML = '';
-            selectedTags.forEach(tag => {
-                const tagElement = document.createElement('span');
-                tagElement.className = 'tag';
-                tagElement.innerHTML = `${tag} <span class="remove-tag" onclick="removeTag('${tag}')">&times;</span>`;
-                tagInput.appendChild(tagElement);
-            });
-            tagInput.appendChild(tagTextInput);
-            tagTextInput.focus();
-        }
+        // ========================================
+        // PHOTO UPLOAD FUNCTIONS
+        // ========================================
 
-        async function handlePhotoUpload(event) {
+        photoUploadInput.addEventListener('change', (event) => {
             const file = event.target.files[0];
             if (!file) return;
             
-            if (!currentUser) {
+            if (!auth.currentUser) {
                 showLoginModal();
                 return;
             }
             
-            // Check upload limit
-            const userDoc = await getDoc(doc(db, "users", currentUser.uid));
-            if (userDoc.exists()) {
-                const userData = userDoc.data();
-                const today = new Date().toISOString().split('T')[0];
-                
-                // Check if user has subscription
-                let uploadLimit = 2; // Free users
-                if (userData.subscription === 'explorer') uploadLimit = 5;
-                if (userData.subscription === 'unlimited') uploadLimit = Infinity;
-                
-                // Count today's uploads
-                const q = query(
-                    collection(db, "photos"),
-                    where("ownerId", "==", currentUser.uid),
-                    where("uploadDate", "==", today)
-                );
-                const snapshot = await getDocs(q);
-                
-                if (snapshot.size >= uploadLimit && uploadLimit !== Infinity) {
-                    alert(`You've reached your daily upload limit (${uploadLimit}). Upgrade your plan to upload more.`);
-                    return;
+            // Check user's upload limit
+            if (currentUserData.subscription === 'free' && currentUserData.uploadsToday >= 2) {
+                showNotification('Upload Limit', 'Free users can upload up to 2 photos per day. Upgrade to upload more.', true);
+                return;
+            }
+            
+            if (currentUserData.subscription === 'explorer' && currentUserData.uploadsToday >= 5) {
+                showNotification('Upload Limit', 'Explorer users can upload up to 5 photos per day. Upgrade to unlimited for more.', true);
+                return;
+            }
+            
+            selectedFile = file;
+            
+            // Show preview
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                document.getElementById('upload-preview').src = e.target.result;
+                document.getElementById('upload-preview').style.display = 'block';
+                document.getElementById('photo-title').value = file.name.split('.')[0];
+            };
+            reader.readAsDataURL(file);
+            
+            // Reset tags
+            tags = [];
+            renderTags();
+            
+            // Show upload modal
+            document.getElementById('upload-modal').classList.add('active');
+        });
+
+        document.getElementById('tag-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addTag();
+            }
+        });
+
+        function addTag() {
+            const tagInput = document.getElementById('tag-input');
+            const tag = tagInput.value.trim();
+            
+            if (tag && tags.length < 5) {
+                if (!tags.includes(tag)) {
+                    tags.push(tag);
+                    renderTags();
                 }
+                tagInput.value = '';
+            }
+        }
+
+        function removeTag(index) {
+            tags.splice(index, 1);
+            renderTags();
+        }
+
+        function renderTags() {
+            const container = document.getElementById('tags-container');
+            container.innerHTML = '';
+            
+            tags.forEach((tag, index) => {
+                const tagElement = document.createElement('div');
+                tagElement.className = 'tag-item';
+                tagElement.innerHTML = `
+                    ${tag}
+                    <span class="tag-remove" onclick="removeTag(${index})">&times;</span>
+                `;
+                container.appendChild(tagElement);
+            });
+        }
+
+        async function uploadPhoto() {
+            if (!selectedFile || !auth.currentUser) return;
+            
+            const title = document.getElementById('photo-title').value.trim() || selectedFile.name.split('.')[0];
+            const price = parseFloat(document.getElementById('photo-price').value) || 0;
+            
+            if (tags.length === 0) {
+                showNotification('Add Tags', 'Please add at least one tag for your photo', true);
+                return;
             }
             
             try {
-                // Show tag input
-                tagInputContainer.style.display = 'block';
-                uploadArea.style.paddingBottom = '1rem';
+                // Show loading
+                document.querySelector('.loading-screen').classList.remove('hidden');
                 
-                // Wait for tags to be added (user will click upload button)
-                currentPhotoId = Date.now().toString();
+                // Upload to storage
+                const storageRef = ref(storage, `photos/${auth.currentUser.uid}/${Date.now()}_${selectedFile.name}`);
+                await uploadBytes(storageRef, selectedFile);
+                const downloadURL = await getDownloadURL(storageRef);
                 
-                // Create a preview of the image
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const preview = document.createElement('img');
-                    preview.src = e.target.result;
-                    preview.style.maxWidth = '100%';
-                    preview.style.maxHeight = '200px';
-                    preview.style.marginTop = '1rem';
-                    preview.style.borderRadius = '5px';
-                    
-                    // Remove any existing preview
-                    const existingPreview = uploadArea.querySelector('.upload-preview');
-                    if (existingPreview) uploadArea.removeChild(existingPreview);
-                    
-                    preview.className = 'upload-preview';
-                    uploadArea.appendChild(preview);
-                    
-                    // Add upload button
-                    const existingButton = uploadArea.querySelector('.confirm-upload-btn');
-                    if (existingButton) uploadArea.removeChild(existingButton);
-                    
-                    const uploadBtn = document.createElement('button');
-                    uploadBtn.className = 'confirm-upload-btn upload-btn';
-                    uploadBtn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Confirm Upload';
-                    uploadBtn.onclick = async () => {
-                        if (selectedTags.length === 0) {
-                            alert('Please add at least one tag for your photo');
-                            return;
-                        }
-                        
-                        try {
-                            document.querySelector('.loading-screen').classList.remove('hidden');
-                            
-                            // Upload to Firebase Storage
-                            const storageRef = ref(storage, `photos/${currentUser.uid}/${currentPhotoId}_${file.name}`);
-                            await uploadBytes(storageRef, file);
-                            const downloadURL = await getDownloadURL(storageRef);
-                            
-                            // Save to Firestore
-                            await addDoc(collection(db, "photos"), {
-                                id: currentPhotoId,
-                                url: downloadURL,
-                                title: file.name.split('.')[0],
-                                tags: selectedTags,
-                                price: 0, // Free by default
-                                ownerId: currentUser.uid,
-                                ownerName: currentUser.displayName,
-                                ownerPhoto: currentUser.photoURL,
-                                createdAt: serverTimestamp(),
-                                uploadDate: new Date().toISOString().split('T')[0],
-                                downloads: 0,
-                                likes: 0,
-                                comments: 0,
-                                isPublic: true,
-                                isMonetized: false,
-                                status: 'pending' // For admin approval if monetized
-                            });
-                            
-                            showNotification('Photo uploaded successfully!', 'success');
-                            loadUserPhotos(currentUser.uid);
-                            loadCommunityFeed();
-                            
-                            // Reset upload area
-                            uploadArea.removeChild(preview);
-                            uploadArea.removeChild(uploadBtn);
-                            tagInputContainer.style.display = 'none';
-                            uploadArea.style.paddingBottom = '2rem';
-                            selectedTags = [];
-                            tagInput.innerHTML = '<input type="text" id="tag-text-input" placeholder="nature, landscape, sunset...">';
-                            tagTextInput = document.getElementById('tag-text-input');
-                        } catch (error) {
-                            console.error("Upload error:", error);
-                            showNotification('Upload failed: ' + error.message, 'error');
-                        } finally {
-                            document.querySelector('.loading-screen').classList.add('hidden');
-                        }
-                    };
-                    
-                    uploadArea.appendChild(uploadBtn);
-                };
-                reader.readAsDataURL(file);
+                // Save to Firestore
+                await addDoc(collection(db, "photos"), {
+                    url: downloadURL,
+                    title,
+                    tags,
+                    price,
+                    ownerId: auth.currentUser.uid,
+                    ownerName: auth.currentUser.displayName,
+                    ownerPhoto: auth.currentUser.photoURL,
+                    createdAt: serverTimestamp(),
+                    downloads: 0,
+                    loves: 0,
+                    comments: 0,
+                    isPublic: true,
+                    isApproved: false,
+                    status: 'pending'
+                });
+                
+                // Update user's upload count
+                await updateDoc(doc(db, "users", auth.currentUser.uid), {
+                    uploadsToday: increment(1),
+                    totalUploads: increment(1)
+                });
+                
+                showNotification('Success', 'Photo uploaded successfully!');
+                closeModal();
+                loadUserPhotos(auth.currentUser.uid);
+                loadCommunityFeed();
             } catch (error) {
                 console.error("Upload error:", error);
-                showNotification('Upload failed: ' + error.message, 'error');
+                showNotification('Error', 'Failed to upload photo. Please try again.', true);
+            } finally {
+                document.querySelector('.loading-screen').classList.add('hidden');
+                photoUploadInput.value = '';
             }
         }
 
         // ========================================
-        // NOTIFICATION SYSTEM
+        // PHOTO MANAGEMENT FUNCTIONS
         // ========================================
 
-        function showNotification(message, type = 'info') {
-            const notificationContainer = document.getElementById('notification-container');
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
+        async function editPhoto(photoId) {
+            // In a real app, implement photo editing functionality
+            showNotification('Info', 'Photo editing feature coming soon!');
+        }
+
+        async function deletePhoto(photoId) {
+            if (!confirm('Are you sure you want to delete this photo?')) return;
             
-            let icon = 'fa-info-circle';
-            if (type === 'success') icon = 'fa-check-circle';
-            if (type === 'error') icon = 'fa-exclamation-circle';
+            try {
+                // Get photo data
+                const photoDoc = await getDoc(doc(db, "photos", photoId));
+                if (!photoDoc.exists()) return;
+                
+                const photo = photoDoc.data();
+                
+                // Delete from storage
+                const storageRef = ref(storage, photo.url);
+                await deleteObject(storageRef);
+                
+                // Delete from Firestore
+                await deleteDoc(doc(db, "photos", photoId));
+                
+                showNotification('Success', 'Photo deleted successfully');
+                loadUserPhotos(auth.currentUser.uid);
+            } catch (error) {
+                console.error("Delete error:", error);
+                showNotification('Error', 'Failed to delete photo', true);
+            }
+        }
+
+        async function toggleLove(photoId) {
+            if (!auth.currentUser) {
+                showLoginModal();
+                return;
+            }
             
-            notification.innerHTML = `
-                <i class="fas ${icon}"></i>
-                <div class="notification-info">
-                    <div class="notification-title">${type.charAt(0).toUpperCase() + type.slice(1)}</div>
-                    <div class="notification-message">${message}</div>
-                </div>
-                <span class="notification-close" onclick="this.parentElement.remove()">&times;</span>
-            `;
+            try {
+                const photoRef = doc(db, "photos", photoId);
+                const userRef = doc(db, "users", auth.currentUser.uid);
+                
+                // Check if user already loved this photo
+                const userDoc = await getDoc(userRef);
+                const lovedPhotos = userDoc.data().lovedPhotos || [];
+                
+                if (lovedPhotos.includes(photoId)) {
+                    // Remove love
+                    await updateDoc(photoRef, {
+                        loves: increment(-1)
+                    });
+                    
+                    await updateDoc(userRef, {
+                        lovedPhotos: arrayRemove(photoId)
+                    });
+                    
+                    showNotification('Info', 'Removed love from photo');
+                } else {
+                    // Add love
+                    await updateDoc(photoRef, {
+                        loves: increment(1)
+                    });
+                    
+                    await updateDoc(userRef, {
+                        lovedPhotos: arrayUnion(photoId)
+                    });
+                    
+                    showNotification('Success', 'Loved this photo!');
+                    
+                    // Check if owner should be notified
+                    const photoDoc = await getDoc(photoRef);
+                    const photo = photoDoc.data();
+                    
+                    if (photo.ownerId !== auth.currentUser.uid) {
+                        await addDoc(collection(db, "notifications"), {
+                            userId: photo.ownerId,
+                            type: 'love',
+                            photoId,
+                            fromUserId: auth.currentUser.uid,
+                            fromUserName: auth.currentUser.displayName,
+                            read: false,
+                            createdAt: serverTimestamp()
+                        });
+                    }
+                }
+                
+                // Refresh data
+                loadCommunityFeed();
+                loadMarketplacePhotos();
+            } catch (error) {
+                console.error("Love error:", error);
+                showNotification('Error', 'Failed to update love', true);
+            }
+        }
+
+        // ========================================
+        // MONETIZATION FUNCTIONS
+        // ========================================
+
+        async function checkMonetizationStatus() {
+            if (!auth.currentUser) return;
             
-            notificationContainer.appendChild(notification);
+            try {
+                const userDoc = await getDoc(doc(db, "users", auth.currentUser.uid));
+                if (!userDoc.exists()) return;
+                
+                const userData = userDoc.data();
+                const monetizationStatus = document.getElementById('monetization-status');
+                const applyBtn = document.getElementById('apply-monetization');
+                const sellPhotos = document.getElementById('sell-photos');
+                
+                if (userData.monetizationApproved) {
+                    monetizationStatus.innerHTML = `
+                        <div style="background-color: #e8f8f5; padding: 1rem; border-radius: 8px; border-left: 4px solid var(--success);">
+                            <h4 style="color: var(--success); margin-bottom: 0.5rem;">
+                                <i class="fas fa-check-circle"></i> Monetization Approved
+                            </h4>
+                            <p>You can now set prices for your approved photos and start earning.</p>
+                        </div>
+                    `;
+                    
+                    applyBtn.style.display = 'none';
+                    sellPhotos.style.display = 'block';
+                    
+                    // Load approved photos
+                    loadApprovedPhotos();
+                } else if (userData.monetizationApplied) {
+                    monetizationStatus.innerHTML = `
+                        <div style="background-color: #fef9e7; padding: 1rem; border-radius: 8px; border-left: 4px solid var(--warning);">
+                            <h4 style="color: var(--warning); margin-bottom: 0.5rem;">
+                                <i class="fas fa-clock"></i> Application Pending
+                            </h4>
+                            <p>Your monetization application is under review. We'll notify you once approved.</p>
+                        </div>
+                    `;
+                    
+                    applyBtn.style.display = 'none';
+                    sellPhotos.style.display = 'none';
+                } else {
+                    // Check if user meets requirements
+                    const q = query(collection(db, "photos"), 
+                        where("ownerId", "==", auth.currentUser.uid),
+                        where("isPublic", "==", true));
+                    
+                    const snapshot = await getDocs(q);
+                    let totalLoves = 0;
+                    let totalComments = 0;
+                    
+                    snapshot.forEach(doc => {
+                        const photo = doc.data();
+                        totalLoves += photo.loves || 0;
+                        totalComments += photo.comments || 0;
+                    });
+                    
+                    const requiredLoves = userData.subscription === 'unlimited' ? 50 : 100;
+                    const requiredComments = userData.subscription === 'unlimited' ? 10 : 20;
+                    
+                    if (totalLoves >= requiredLoves && totalComments >= requiredComments) {
+                        monetizationStatus.innerHTML = `
+                            <div style="background-color: #eaf2f8; padding: 1rem; border-radius: 8px; border-left: 4px solid var(--primary);">
+                                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">
+                                    <i class="fas fa-gem"></i> Ready for Monetization
+                                </h4>
+                                <p>You meet the requirements to apply for monetization!</p>
+                                <p><strong>Stats:</strong> ${totalLoves} loves, ${totalComments} comments</p>
+                            </div>
+                        `;
+                        
+                        applyBtn.style.display = 'block';
+                        sellPhotos.style.display = 'none';
+                    } else {
+                        monetizationStatus.innerHTML = `
+                            <div style="background-color: #f5eef8; padding: 1rem; border-radius: 8px; border-left: 4px solid #9b59b6;">
+                                <h4 style="color: #9b59b6; margin-bottom: 0.5rem;">
+                                    <i class="fas fa-lock"></i> Monetization Locked
+                                </h4>
+                                <p>You need ${requiredLoves - totalLoves} more loves and ${requiredComments - totalComments} more comments to apply.</p>
+                                <p><strong>Current Stats:</strong> ${totalLoves} loves, ${totalComments} comments</p>
+                                ${userData.subscription !== 'unlimited' ? 
+                                    `<p style="margin-top: 0.5rem;">Upgrade to PRO to qualify with only 50 loves and 10 comments!</p>` : ''}
+                            </div>
+                        `;
+                        
+                        applyBtn.style.display = 'none';
+                        sellPhotos.style.display = 'none';
+                    }
+                }
+            } catch (error) {
+                console.error("Monetization check error:", error);
+            }
+        }
+
+        async function applyForMonetization() {
+            if (!auth.currentUser) return;
             
-            // Show notification
-            setTimeout(() => {
-                notification.classList.add('show');
-            }, 100);
+            try {
+                await updateDoc(doc(db, "users", auth.currentUser.uid), {
+                    monetizationApplied: true,
+                    monetizationAppliedAt: serverTimestamp()
+                });
+                
+                // Notify admin
+                await addDoc(collection(db, "adminNotifications"), {
+                    type: 'monetizationRequest',
+                    userId: auth.currentUser.uid,
+                    userName: auth.currentUser.displayName,
+                    read: false,
+                    createdAt: serverTimestamp()
+                });
+                
+                showNotification('Success', 'Monetization application submitted for review');
+                checkMonetizationStatus();
+            } catch (error) {
+                console.error("Apply error:", error);
+                showNotification('Error', 'Failed to apply for monetization', true);
+            }
+        }
+
+        async function loadApprovedPhotos() {
+            try {
+                const q = query(collection(db, "photos"), 
+                    where("ownerId", "==", auth.currentUser.uid),
+                    where("isPublic", "==", true),
+                    where("isApproved", "==", true),
+                    orderBy("createdAt", "desc"));
+                
+                const snapshot = await getDocs(q);
+                const container = document.getElementById('approved-photos');
+                container.innerHTML = '';
+                
+                snapshot.forEach(doc => {
+                    const photo = doc.data();
+                    container.innerHTML += `
+                        <div class="photo-card">
+                            <img src="${photo.url}" alt="${photo.title}" class="photo-thumbnail">
+                            <div class="photo-details">
+                                <h3 class="photo-title">${photo.title}</h3>
+                                <div class="form-group">
+                                    <label class="form-label">Set Price ($)</label>
+                                    <input type="number" class="form-input" id="price-${doc.id}" 
+                                        value="${photo.price || 0}" min="0" step="0.01">
+                                </div>
+                                <button class="action-btn" style="background-color: var(--success);" 
+                                    onclick="updatePhotoPrice('${doc.id}')">
+                                    <i class="fas fa-save"></i> Save Price
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                console.error("Load approved error:", error);
+            }
+        }
+
+        async function updatePhotoPrice(photoId) {
+            const priceInput = document.getElementById(`price-${photoId}`);
+            const price = parseFloat(priceInput.value) || 0;
             
-            // Auto remove after 5 seconds
-            setTimeout(() => {
-                notification.classList.remove('show');
-                setTimeout(() => {
-                    notification.remove();
-                }, 300);
-            }, 5000);
+            try {
+                await updateDoc(doc(db, "photos", photoId), {
+                    price: price
+                });
+                
+                showNotification('Success', 'Price updated successfully');
+            } catch (error) {
+                console.error("Price update error:", error);
+                showNotification('Error', 'Failed to update price', true);
+            }
+        }
+
+        // ========================================
+        // ADMIN FUNCTIONS
+        // ========================================
+
+        async function notifyAllUsers() {
+            document.getElementById('admin-notification-form').style.display = 'block';
+            document.getElementById('admin-user-list').style.display = 'none';
+            document.getElementById('admin-content-moderation').style.display = 'none';
+        }
+
+        async function manageUsers() {
+            document.getElementById('admin-notification-form').style.display = 'none';
+            document.getElementById('admin-content-moderation').style.display = 'none';
+            
+            const userList = document.getElementById('admin-user-list');
+            userList.style.display = 'block';
+            userList.innerHTML = '<p>Loading users...</p>';
+            
+            try {
+                const snapshot = await getDocs(collection(db, "users"));
+                userList.innerHTML = '<h4>User Management</h4>';
+                
+                snapshot.forEach(doc => {
+                    const user = doc.data();
+                    userList.innerHTML += `
+                        <div style="background-color: white; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong>${user.name}</strong>
+                                    <div style="font-size: 0.8rem; color: var(--gray);">
+                                        ${user.email} • ${user.subscription || 'free'}
+                                    </div>
+                                </div>
+                                <div>
+                                    <button class="action-btn" style="background-color: var(--primary); padding: 0.3rem 0.6rem; font-size: 0.8rem;" 
+                                        onclick="sendUserNotification('${doc.id}')">
+                                        Notify
+                                    </button>
+                                    <button class="action-btn" style="background-color: var(--warning); padding: 0.3rem 0.6rem; font-size: 0.8rem;" 
+                                        onclick="suspendUser('${doc.id}', ${user.suspended || false})">
+                                        ${user.suspended ? 'Unsuspend' : 'Suspend'}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                console.error("User load error:", error);
+                userList.innerHTML = '<p>Error loading users</p>';
+            }
+        }
+
+        async function moderateContent() {
+            document.getElementById('admin-notification-form').style.display = 'none';
+            document.getElementById('admin-user-list').style.display = 'none';
+            
+            const contentMod = document.getElementById('admin-content-moderation');
+            contentMod.style.display = 'block';
+            contentMod.innerHTML = '<p>Loading content for moderation...</p>';
+            
+            try {
+                // Get pending monetization requests
+                const monetizationQuery = query(collection(db, "adminNotifications"), 
+                    where("type", "==", "monetizationRequest"),
+                    where("read", "==", false),
+                    orderBy("createdAt", "desc"));
+                
+                const monetizationSnapshot = await getDocs(monetizationQuery);
+                
+                // Get reported content
+                const reportedQuery = query(collection(db, "reports"), 
+                    where("resolved", "==", false),
+                    orderBy("createdAt", "desc"));
+                
+                const reportedSnapshot = await getDocs(reportedQuery);
+                
+                contentMod.innerHTML = `
+                    <h4>Content Moderation</h4>
+                    <div style="margin-bottom: 2rem;">
+                        <h5 style="margin-bottom: 0.5rem; color: var(--primary);">
+                            <i class="fas fa-gem"></i> Monetization Requests
+                        </h5>
+                        ${monetizationSnapshot.empty ? 
+                            '<p>No pending monetization requests</p>' : 
+                            monetizationSnapshot.docs.map(doc => {
+                                const req = doc.data();
+                                return `
+                                    <div style="background-color: white; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                            <strong>${req.userName}</strong>
+                                            <div style="font-size: 0.8rem; color: var(--gray);">
+                                                ${new Date(req.createdAt?.toDate()).toLocaleString()}
+                                            </div>
+                                        </div>
+                                        <div style="display: flex; gap: 0.5rem;">
+                                            <button class="action-btn" style="background-color: var(--success); padding: 0.3rem 0.6rem; font-size: 0.8rem;" 
+                                                onclick="approveMonetization('${req.userId}', '${doc.id}')">
+                                                Approve
+                                            </button>
+                                            <button class="action-btn" style="background-color: var(--accent); padding: 0.3rem 0.6rem; font-size: 0.8rem;" 
+                                                onclick="rejectMonetization('${req.userId}', '${doc.id}')">
+                                                Reject
+                                            </button>
+                                            <button class="action-btn" style="background-color: var(--primary); padding: 0.3rem 0.6rem; font-size: 0.8rem;" 
+                                                onclick="viewUser('${req.userId}')">
+                                                View Profile
+                                            </button>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                    </div>
+                    <div>
+                        <h5 style="margin-bottom: 0.5rem; color: var(--accent);">
+                            <i class="fas fa-flag"></i> Reported Content
+                        </h5>
+                        ${reportedSnapshot.empty ? 
+                            '<p>No reported content</p>' : 
+                            reportedSnapshot.docs.map(doc => {
+                                const report = doc.data();
+                                return `
+                                    <div style="background-color: white; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                            <div>
+                                                <strong>${report.reason}</strong>
+                                                <div style="font-size: 0.8rem; color: var(--gray);">
+                                                    Reported by: ${report.reporterName}
+                                                </div>
+                                            </div>
+                                            <div style="font-size: 0.8rem; color: var(--gray);">
+                                                ${new Date(report.createdAt?.toDate()).toLocaleString()}
+                                            </div>
+                                        </div>
+                                        <p style="margin-bottom: 0.5rem;">${report.details || 'No details provided'}</p>
+                                        <div style="display: flex; gap: 0.5rem;">
+                                            <button class="action-btn" style="background-color: var(--accent); padding: 0.3rem 0.6rem; font-size: 0.8rem;" 
+                                                onclick="removeContent('${report.contentId}', '${report.contentType}', '${doc.id}')">
+                                                Remove Content
+                                            </button>
+                                            <button class="action-btn" style="background-color: var(--gray); padding: 0.3rem 0.6rem; font-size: 0.8rem;" 
+                                                onclick="dismissReport('${doc.id}')">
+                                                Dismiss
+                                            </button>
+                                            <button class="action-btn" style="background-color: var(--warning); padding: 0.3rem 0.6rem; font-size: 0.8rem;" 
+                                                onclick="suspendUser('${report.userId}', true)">
+                                                Suspend User
+                                            </button>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                    </div>
+                `;
+            } catch (error) {
+                console.error("Moderation error:", error);
+                contentMod.innerHTML = '<p>Error loading content for moderation</p>';
+            }
+        }
+
+        async function sendNotification() {
+            const message = document.getElementById('notification-message').value.trim();
+            if (!message) return;
+            
+            try {
+                // Save notification to all users
+                const usersSnapshot = await getDocs(collection(db, "users"));
+                
+                usersSnapshot.forEach(async (userDoc) => {
+                    await addDoc(collection(db, "notifications"), {
+                        userId: userDoc.id,
+                        type: 'admin',
+                        message,
+                        read: false,
+                        createdAt: serverTimestamp()
+                    });
+                });
+                
+                showNotification('Success', 'Notification sent to all users');
+                document.getElementById('notification-message').value = '';
+                document.getElementById('admin-notification-form').style.display = 'none';
+            } catch (error) {
+                console.error("Notification error:", error);
+                showNotification('Error', 'Failed to send notification', true);
+            }
+        }
+
+        async function sendUserNotification(userId) {
+            const message = prompt("Enter notification message:");
+            if (!message) return;
+            
+            try {
+                await addDoc(collection(db, "notifications"), {
+                    userId,
+                    type: 'admin',
+                    message,
+                    read: false,
+                    createdAt: serverTimestamp()
+                });
+                
+                showNotification('Success', 'Notification sent to user');
+            } catch (error) {
+                console.error("User notification error:", error);
+                showNotification('Error', 'Failed to send notification', true);
+            }
+        }
+
+        async function suspendUser(userId, suspend) {
+            try {
+                await updateDoc(doc(db, "users", userId), {
+                    suspended: suspend
+                });
+                
+                showNotification('Success', `User ${suspend ? 'suspended' : 'unsuspended'}`);
+                manageUsers();
+            } catch (error) {
+                console.error("Suspend error:", error);
+                showNotification('Error', 'Failed to update user status', true);
+            }
+        }
+
+        async function approveMonetization(userId, notificationId) {
+            try {
+                // Update user status
+                await updateDoc(doc(db, "users", userId), {
+                    monetizationApproved: true,
+                    monetizationApprovedAt: serverTimestamp()
+                });
+                
+                // Mark notification as read
+                await updateDoc(doc(db, "adminNotifications", notificationId), {
+                    read: true
+                });
+                
+                // Notify user
+                await addDoc(collection(db, "notifications"), {
+                    userId,
+                    type: 'monetizationApproved',
+                    read: false,
+                    createdAt: serverTimestamp()
+                });
+                
+                showNotification('Success', 'Monetization approved');
+                moderateContent();
+            } catch (error) {
+                console.error("Approve error:", error);
+                showNotification('Error', 'Failed to approve monetization', true);
+            }
+        }
+
+        async function rejectMonetization(userId, notificationId) {
+            try {
+                // Mark notification as read
+                await updateDoc(doc(db, "adminNotifications", notificationId), {
+                    read: true
+                });
+                
+                // Notify user
+                await addDoc(collection(db, "notifications"), {
+                    userId,
+                    type: 'monetizationRejected',
+                    read: false,
+                    createdAt: serverTimestamp()
+                });
+                
+                showNotification('Info', 'Monetization request rejected');
+                moderateContent();
+            } catch (error) {
+                console.error("Reject error:", error);
+                showNotification('Error', 'Failed to reject monetization', true);
+            }
+        }
+
+        async function removeContent(contentId, contentType, reportId) {
+            try {
+                if (contentType === 'photo') {
+                    // Get photo data
+                    const photoDoc = await getDoc(doc(db, "photos", contentId));
+                    if (photoDoc.exists()) {
+                        const photo = photoDoc.data();
+                        
+                        // Delete from storage
+                        const storageRef = ref(storage, photo.url);
+                        await deleteObject(storageRef);
+                        
+                        // Delete from Firestore
+                        await deleteDoc(doc(db, "photos", contentId));
+                    }
+                }
+                
+                // Mark report as resolved
+                await updateDoc(doc(db, "reports", reportId), {
+                    resolved: true,
+                    resolvedAt: serverTimestamp()
+                });
+                
+                showNotification('Success', 'Content removed and report resolved');
+                moderateContent();
+            } catch (error) {
+                console.error("Remove error:", error);
+                showNotification('Error', 'Failed to remove content', true);
+            }
+        }
+
+        async function dismissReport(reportId) {
+            try {
+                // Mark report as resolved
+                await updateDoc(doc(db, "reports", reportId), {
+                    resolved: true,
+                    resolvedAt: serverTimestamp()
+                });
+                
+                showNotification('Info', 'Report dismissed');
+                moderateContent();
+            } catch (error) {
+                console.error("Dismiss error:", error);
+                showNotification('Error', 'Failed to dismiss report', true);
+            }
+        }
+
+        async function viewUser(userId) {
+            // In a real app, you would navigate to the user's profile
+            alert(`Viewing user ${userId}`);
         }
 
         // ========================================
@@ -2150,15 +2444,15 @@
                         subscription: "free",
                         joinDate: serverTimestamp(),
                         purchasedPhotos: [],
-                        likesGiven: [],
+                        lovedPhotos: [],
                         uploadsToday: 0,
                         downloadsToday: 0,
-                        lastUploadDate: null,
-                        lastDownloadDate: null,
-                        isMonetized: false,
+                        totalUploads: 0,
+                        totalDownloads: 0,
                         monetizationApplied: false,
-                        totalEarnings: 0,
-                        role: user.email === adminEmail ? 'admin' : 'user'
+                        monetizationApproved: false,
+                        suspended: false,
+                        isAdmin: user.email === "ahamed.to.tipak@gmail.com" // Set admin
                     });
                 }
                 
@@ -2166,138 +2460,72 @@
                 updateUserProfile(user);
                 
                 // Check if user is admin
-                if (user.email === adminEmail) {
-                    document.getElementById('admin-controls').style.display = 'block';
-                    document.getElementById('monetization-tab').style.display = 'block';
+                const userData = userDoc.data();
+                if (userData.isAdmin) {
+                    document.getElementById('admin-section').style.display = 'block';
                 }
             } catch (error) {
                 console.error("Google sign-in error:", error);
-                showNotification('Sign-in failed. Please try again.', 'error');
+                showNotification('Error', 'Sign-in failed. Please try again.', true);
             }
         }
 
         async function updateUserProfile(user) {
             const userDoc = await getDoc(doc(db, "users", user.uid));
             if (userDoc.exists()) {
-                const userData = userDoc.data();
+                currentUserData = userDoc.data();
                 const profileHeader = document.getElementById('user-profile');
                 
-                // Count user's photos
-                const photosQuery = query(collection(db, "photos"), where("ownerId", "==", user.uid));
-                const photosSnapshot = await getDocs(photosQuery);
-                
-                // Count user's followers (simplified - would need a followers collection in real app)
-                const followersQuery = query(collection(db, "followers"), where("followingId", "==", user.uid));
-                const followersSnapshot = await getDocs(followersQuery);
-                
-                // Count user's following (simplified)
-                const followingQuery = query(collection(db, "followers"), where("followerId", "==", user.uid));
-                const followingSnapshot = await getDocs(followingQuery);
-                
                 profileHeader.innerHTML = `
-                    <div class="profile-content">
-                        <img src="${user.photoURL || 'https://source.unsplash.com/random/300x300/?portrait'}" 
-                             alt="Profile" class="profile-pic">
-                        <div class="profile-name">
-                            ${user.displayName || 'User'}
-                            ${userData.subscription !== 'free' ? '<span class="pro-badge">PRO</span>' : ''}
+                    <img src="${user.photoURL || 'https://source.unsplash.com/random/300x300/?portrait'}" 
+                         alt="Profile" class="profile-pic">
+                    <h2 class="profile-name">${user.displayName || 'User'}
+                        ${currentUserData.subscription === 'unlimited' ? 
+                            '<span class="pro-badge"><i class="fas fa-crown"></i> PRO</span>' : ''}
+                    </h2>
+                    <p class="profile-bio">${currentUserData.bio || 'No bio yet'}</p>
+                    
+                    <div class="member-badge">
+                        <i class="fas fa-${currentUserData.subscription === 'unlimited' ? 'crown' : 'user'}"></i> 
+                        ${currentUserData.subscription === 'unlimited' ? 'PRO MEMBER' : 
+                         currentUserData.subscription === 'explorer' ? 'EXPLORER MEMBER' : 'FREE MEMBER'}
+                    </div>
+                    
+                    <div class="profile-stats">
+                        <div class="stat-item" onclick="switchTab('uploads')">
+                            <div class="stat-value" id="photo-count">0</div>
+                            <div class="stat-label">Photos</div>
                         </div>
-                        <p class="profile-bio">${userData.bio || 'No bio yet'}</p>
-                        
-                        ${userData.isMonetized ? 
-                            `<div class="member-badge">
-                                <i class="fas fa-star"></i> MONETIZED CREATOR
-                            </div>` : 
-                            userData.subscription === 'unlimited' ? 
-                            `<div class="member-badge">
-                                <i class="fas fa-crown"></i> PRO MEMBER
-                            </div>` : 
-                            `<div class="member-badge">
-                                <i class="fas fa-user"></i> FREE MEMBER
-                            </div>`
-                        }
-                        
-                        <div class="profile-stats">
-                            <div class="stat-item" onclick="switchTab('uploads')">
-                                <div class="stat-value" id="photo-count">${photosSnapshot.size}</div>
-                                <div class="stat-label">Photos</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-value">${followersSnapshot.size}</div>
-                                <div class="stat-label">Followers</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-value">${followingSnapshot.size}</div>
-                                <div class="stat-label">Following</div>
-                            </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${currentUserData.followers?.length || 0}</div>
+                            <div class="stat-label">Followers</div>
                         </div>
-                        
-                        <div class="profile-actions">
-                            <button class="action-btn" style="background-color: ${userData.subscription === 'unlimited' ? 'var(--accent)' : 'var(--primary)'};" 
-                                    onclick="showSubscriptionModal()">
-                                ${userData.subscription === 'unlimited' ? 'Manage Plan' : 'Upgrade Plan'}
-                            </button>
-                            
-                            ${userData.isMonetized ? `
-                                <button class="action-btn" style="background-color: var(--success);" onclick="showMonetizationStats()">
-                                    <i class="fas fa-chart-line"></i> Earnings
-                                </button>
-                            ` : ''}
+                        <div class="stat-item">
+                            <div class="stat-value">${currentUserData.following?.length || 0}</div>
+                            <div class="stat-label">Following</div>
                         </div>
                     </div>
+                    
+                    <button class="action-btn" style="background: ${currentUserData.subscription === 'unlimited' ? 
+                        'linear-gradient(135deg, var(--accent), var(--accent-light))' : 
+                        'linear-gradient(135deg, var(--primary), var(--primary-light))'};" 
+                            onclick="showSubscriptionModal()">
+                        ${currentUserData.subscription === 'unlimited' ? 'Manage Plan' : 'Upgrade Plan'}
+                    </button>
                 `;
                 
-                // Show monetization card if user hasn't applied yet
-                if (!userData.isMonetized && !userData.monetizationApplied) {
-                    document.getElementById('monetize-card').style.display = 'block';
-                    
-                    // Calculate likes and comments for monetization
-                    const userPhotosQuery = query(
-                        collection(db, "photos"),
-                        where("ownerId", "==", user.uid)
-                    );
-                    const userPhotosSnapshot = await getDocs(userPhotosQuery);
-                    
-                    let totalLikes = 0;
-                    let totalComments = 0;
-                    
-                    userPhotosSnapshot.forEach(doc => {
-                        const photo = doc.data();
-                        totalLikes += photo.likes || 0;
-                        totalComments += photo.comments || 0;
-                    });
-                    
-                    document.getElementById('likes-count').textContent = totalLikes;
-                    document.getElementById('comments-count').textContent = totalComments;
-                    
-                    // Check requirements
-                    const requiredLikes = userData.subscription === 'unlimited' ? 50 : 100;
-                    const requiredComments = userData.subscription === 'unlimited' ? 10 : 20;
-                    
-                    document.getElementById('likes-status').textContent = 
-                        totalLikes >= requiredLikes ? '✓ Requirement met' : 'Not reached';
-                    document.getElementById('likes-status').style.color = 
-                        totalLikes >= requiredLikes ? 'var(--success)' : 'var(--accent)';
-                    
-                    document.getElementById('comments-status').textContent = 
-                        totalComments >= requiredComments ? '✓ Requirement met' : 'Not reached';
-                    document.getElementById('comments-status').style.color = 
-                        totalComments >= requiredComments ? 'var(--success)' : 'var(--accent)';
-                    
-                    const applyBtn = document.getElementById('apply-monetize-btn');
-                    applyBtn.disabled = !(totalLikes >= requiredLikes && totalComments >= requiredComments);
-                }
+                // Load user-specific data
+                loadUserPhotos(user.uid);
+                checkMonetizationStatus();
             }
         }
 
         async function loadFeaturedPhotos() {
             try {
-                const q = query(
-                    collection(db, "photos"),
-                    where("isPublic", "==", true),
-                    orderBy("createdAt", "desc"),
-                    limit(5)
-                );
+                const q = query(collection(db, "photos"), 
+                              where("isPublic", "==", true),
+                              orderBy("createdAt", "desc"),
+                              limit(4));
                 const snapshot = await getDocs(q);
                 
                 const featuredContainer = document.getElementById('featured-photos');
@@ -2311,25 +2539,36 @@
                             <div class="photo-details">
                                 <h3 class="photo-title">${photo.title}</h3>
                                 <div class="photo-author">
-                                    <img src="${photo.ownerPhoto || 'https://source.unsplash.com/random/100x100/?portrait'}" alt="${photo.ownerName}">
-                                    ${photo.ownerName}
-                                    ${photo.isMonetized ? '<span class="pro-badge">PRO</span>' : ''}
+                                    <span>by ${photo.ownerName}</span>
+                                    ${photo.ownerSubscription === 'unlimited' ? 
+                                        '<span class="pro-badge" style="font-size: 0.6rem; padding: 0.1rem 0.4rem;">PRO</span>' : ''}
                                 </div>
-                                <div class="photo-tags">
-                                    ${photo.tags.map(tag => `<span class="photo-tag">#${tag}</span>`).join('')}
+                                <div class="photo-stats">
+                                    <div class="photo-stat">
+                                        <i class="fas fa-heart"></i> ${photo.loves || 0}
+                                    </div>
+                                    <div class="photo-stat">
+                                        <i class="fas fa-comment"></i> ${photo.comments || 0}
+                                    </div>
+                                    <div class="photo-stat">
+                                        <i class="fas fa-download"></i> ${photo.downloads || 0}
+                                    </div>
                                 </div>
                                 ${photo.price > 0 ? 
                                     `<div class="photo-price">$${photo.price.toFixed(2)}</div>
-                                     <button class="action-btn buy-btn" onclick="handlePhotoAction('${doc.id}', ${photo.price})">Buy Now</button>` :
+                                     <button class="action-btn buy-btn" onclick="handlePhotoAction('${doc.id}', ${photo.price})">
+                                        <i class="fas fa-shopping-cart"></i> Buy Now
+                                     </button>` :
                                     `<span class="free-badge">FREE</span>
-                                     <button class="action-btn download-btn" onclick="handlePhotoAction('${doc.id}', 0)">Download</button>`}
+                                     <button class="action-btn download-btn" onclick="handlePhotoAction('${doc.id}', 0)">
+                                        <i class="fas fa-download"></i> Download
+                                     </button>`}
                             </div>
                         </div>
                     `;
                 });
             } catch (error) {
                 console.error("Error loading featured photos:", error);
-                showNotification('Error loading featured photos', 'error');
             }
         }
 
@@ -2337,26 +2576,20 @@
             try {
                 let q;
                 if (filter === 'free') {
-                    q = query(
-                        collection(db, "photos"),
+                    q = query(collection(db, "photos"), 
                         where("isPublic", "==", true),
                         where("price", "==", 0),
-                        orderBy("createdAt", "desc")
-                    );
+                        orderBy("createdAt", "desc"));
                 } else if (filter === 'premium') {
-                    q = query(
-                        collection(db, "photos"),
+                    q = query(collection(db, "photos"), 
                         where("isPublic", "==", true),
                         where("price", ">", 0),
                         orderBy("price"),
-                        orderBy("createdAt", "desc")
-                    );
+                        orderBy("createdAt", "desc"));
                 } else {
-                    q = query(
-                        collection(db, "photos"),
+                    q = query(collection(db, "photos"), 
                         where("isPublic", "==", true),
-                        orderBy("createdAt", "desc")
-                    );
+                        orderBy("createdAt", "desc"));
                 }
                 
                 const snapshot = await getDocs(q);
@@ -2371,51 +2604,48 @@
                             <div class="photo-details">
                                 <h3 class="photo-title">${photo.title}</h3>
                                 <div class="photo-author">
-                                    <img src="${photo.ownerPhoto || 'https://source.unsplash.com/random/100x100/?portrait'}" alt="${photo.ownerName}">
-                                    ${photo.ownerName}
-                                    ${photo.isMonetized ? '<span class="pro-badge">PRO</span>' : ''}
+                                    <span>by ${photo.ownerName}</span>
+                                    ${photo.ownerSubscription === 'unlimited' ? 
+                                        '<span class="pro-badge" style="font-size: 0.6rem; padding: 0.1rem 0.4rem;">PRO</span>' : ''}
                                 </div>
-                                <div class="photo-tags">
-                                    ${photo.tags.map(tag => `<span class="photo-tag">#${tag}</span>`).join('')}
+                                <div class="photo-stats">
+                                    <div class="photo-stat">
+                                        <i class="fas fa-heart"></i> ${photo.loves || 0}
+                                    </div>
+                                    <div class="photo-stat">
+                                        <i class="fas fa-comment"></i> ${photo.comments || 0}
+                                    </div>
+                                    <div class="photo-stat">
+                                        <i class="fas fa-download"></i> ${photo.downloads || 0}
+                                    </div>
                                 </div>
                                 ${photo.price > 0 ? 
                                     `<div class="photo-price">$${photo.price.toFixed(2)}</div>
-                                     <button class="action-btn buy-btn" onclick="handlePhotoAction('${doc.id}', ${photo.price})">Buy Now</button>` :
+                                     <button class="action-btn buy-btn" onclick="handlePhotoAction('${doc.id}', ${photo.price})">
+                                        <i class="fas fa-shopping-cart"></i> Buy Now
+                                     </button>` :
                                     `<span class="free-badge">FREE</span>
-                                     <button class="action-btn download-btn" onclick="handlePhotoAction('${doc.id}', 0)">Download</button>`}
+                                     <button class="action-btn download-btn" onclick="handlePhotoAction('${doc.id}', 0)">
+                                        <i class="fas fa-download"></i> Download
+                                     </button>`}
                             </div>
                         </div>
                     `;
                 });
             } catch (error) {
                 console.error("Error loading marketplace photos:", error);
-                showNotification('Error loading marketplace', 'error');
             }
         }
 
         async function loadUserPhotos(userId) {
             try {
-                const q = query(
-                    collection(db, "photos"),
-                    where("ownerId", "==", userId),
-                    orderBy("createdAt", "desc")
-                );
+                const q = query(collection(db, "photos"), 
+                              where("ownerId", "==", userId),
+                              orderBy("createdAt", "desc"));
                 const snapshot = await getDocs(q);
                 
                 const userUploadsContainer = document.getElementById('user-uploads');
                 userUploadsContainer.innerHTML = '';
-                
-                if (snapshot.empty) {
-                    userUploadsContainer.innerHTML = `
-                        <div style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
-                            <p>You haven't uploaded any photos yet.</p>
-                            <button class="upload-btn" onclick="showSection('feed')" style="margin-top: 1rem;">
-                                <i class="fas fa-upload"></i> Upload Your First Photo
-                            </button>
-                        </div>
-                    `;
-                    return;
-                }
                 
                 snapshot.forEach(doc => {
                     const photo = doc.data();
@@ -2424,24 +2654,27 @@
                             <img src="${photo.url}" alt="${photo.title}" class="photo-thumbnail">
                             <div class="photo-details">
                                 <h3 class="photo-title">${photo.title}</h3>
-                                <div class="photo-tags">
-                                    ${photo.tags.map(tag => `<span class="photo-tag">#${tag}</span>`).join('')}
+                                <div class="photo-stats">
+                                    <div class="photo-stat">
+                                        <i class="fas fa-heart"></i> ${photo.loves || 0}
+                                    </div>
+                                    <div class="photo-stat">
+                                        <i class="fas fa-comment"></i> ${photo.comments || 0}
+                                    </div>
+                                    <div class="photo-stat">
+                                        <i class="fas fa-download"></i> ${photo.downloads || 0}
+                                    </div>
                                 </div>
-                                <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
-                                    <button class="action-btn" style="background-color: #95a5a6; flex: 1;"
+                                <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                                    <button class="action-btn" style="background-color: var(--gray); flex: 1;"
                                             onclick="editPhoto('${doc.id}')">
                                         <i class="fas fa-edit"></i> Edit
                                     </button>
                                     <button class="action-btn" style="background-color: var(--accent); flex: 1;"
-                                            onclick="deletePhoto('${doc.id}', '${photo.url}')">
+                                            onclick="deletePhoto('${doc.id}')">
                                         <i class="fas fa-trash"></i> Delete
                                     </button>
                                 </div>
-                                ${photo.isMonetized ? `
-                                    <div style="margin-top: 0.5rem;">
-                                        <span style="font-size: 0.8rem; color: #666;">Earnings: $${(photo.price * photo.downloads * 0.7).toFixed(2)}</span>
-                                    </div>
-                                ` : ''}
                             </div>
                         </div>
                     `;
@@ -2451,18 +2684,15 @@
                 document.getElementById('photo-count').textContent = snapshot.size;
             } catch (error) {
                 console.error("Error loading user photos:", error);
-                showNotification('Error loading your photos', 'error');
             }
         }
 
         async function loadCommunityFeed() {
             try {
-                const q = query(
-                    collection(db, "photos"),
-                    where("isPublic", "==", true),
-                    orderBy("createdAt", "desc"),
-                    limit(10)
-                );
+                const q = query(collection(db, "photos"), 
+                              where("isPublic", "==", true),
+                              orderBy("createdAt", "desc"),
+                              limit(10));
                 const snapshot = await getDocs(q);
                 
                 const feedContainer = document.getElementById('community-feed');
@@ -2470,71 +2700,59 @@
                 
                 snapshot.forEach(doc => {
                     const photo = doc.data();
-                    const isLiked = currentUser && photo.likesBy && photo.likesBy.includes(currentUser.uid);
+                    const isLoved = currentUserData?.lovedPhotos?.includes(doc.id) || false;
                     
                     feedContainer.innerHTML += `
                         <div class="feed-post">
-                            <img src="${photo.url}" alt="Post" class="post-image">
                             <div class="post-header">
-                                <div class="post-author">
-                                    <img src="${photo.ownerPhoto || 'https://source.unsplash.com/random/100x100/?portrait'}" alt="${photo.ownerName}">
-                                    <div>
-                                        <div class="post-author-name">
-                                            ${photo.ownerName}
-                                            ${photo.isMonetized ? '<span class="pro-badge">PRO</span>' : ''}
-                                        </div>
-                                        <div class="post-time">${formatDate(photo.createdAt?.toDate())}</div>
-                                    </div>
+                                <img src="${photo.ownerPhoto || 'https://source.unsplash.com/random/100x100/?portrait'}" 
+                                     alt="User" class="post-user-avatar">
+                                <div class="post-user-name">
+                                    ${photo.ownerName}
+                                    ${photo.ownerSubscription === 'unlimited' ? 
+                                        '<span class="pro-badge" style="font-size: 0.6rem; padding: 0.1rem 0.4rem;">PRO</span>' : ''}
                                 </div>
                             </div>
+                            
+                            <img src="${photo.url}" alt="Post" class="post-image">
+                            
                             <div class="post-caption">
                                 <p>${photo.title}</p>
-                                <div class="photo-tags" style="margin-top: 0.5rem;">
-                                    ${photo.tags.map(tag => `<span class="photo-tag">#${tag}</span>`).join('')}
+                                <div class="post-tags">
+                                    ${photo.tags?.map(tag => `<span class="post-tag">#${tag}</span>`).join('')}
                                 </div>
                             </div>
+                            
                             <div class="post-actions">
-                                <div class="post-action ${isLiked ? 'liked' : ''}" onclick="likePhoto('${doc.id}', ${!isLiked})">
+                                <div class="post-action ${isLoved ? 'liked' : ''}" onclick="toggleLove('${doc.id}')">
                                     <i class="fas fa-heart"></i>
-                                    <span>${photo.likes || 0}</span>
+                                    <span>${photo.loves || 0}</span>
                                 </div>
-                                <div class="post-action" onclick="focusCommentInput('${doc.id}')">
+                                <div class="post-action">
                                     <i class="fas fa-comment"></i>
                                     <span>${photo.comments || 0}</span>
                                 </div>
-                                <div class="post-action" onclick="sharePhoto('${photo.url}')">
+                                <div class="post-action">
                                     <i class="fas fa-share"></i>
                                     <span>Share</span>
                                 </div>
-                            </div>
-                            <div class="post-comment" id="comment-${doc.id}" style="display: none; padding: 0 1rem 1rem;">
-                                <input type="text" placeholder="Add a comment..." style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;">
-                                <button style="margin-top: 0.5rem; padding: 0.3rem 0.8rem; background-color: var(--primary); color: white; border: none; border-radius: 5px; cursor: pointer;" onclick="addComment('${doc.id}', this.previousElementSibling.value)">Post</button>
                             </div>
                         </div>
                     `;
                 });
             } catch (error) {
                 console.error("Error loading community feed:", error);
-                showNotification('Error loading community feed', 'error');
             }
         }
 
-        function formatDate(date) {
-            if (!date) return 'Just now';
-            const now = new Date();
-            const diff = now - date;
-            const seconds = Math.floor(diff / 1000);
-            
-            if (seconds < 60) return 'Just now';
-            if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
-            if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
-            return `${Math.floor(seconds / 86400)}d ago`;
-        }
-
         async function handlePhotoAction(photoId, price) {
-            if (!currentUser) {
+            if (!auth.currentUser) {
                 showLoginModal();
+                return;
+            }
+            
+            if (currentUserData.suspended) {
+                showNotification('Account Suspended', 'Your account is suspended. You can only view content.', true);
                 return;
             }
             
@@ -2550,26 +2768,19 @@
         async function purchasePhoto(photoId, price) {
             try {
                 // Check download limit
-                const userDoc = await getDoc(doc(db, "users", currentUser.uid));
-                if (userDoc.exists()) {
-                    const userData = userDoc.data();
-                    const today = new Date().toISOString().split('T')[0];
-                    
-                    // Check if user has subscription
-                    let downloadLimit = 1; // Free users
-                    if (userData.subscription === 'explorer') downloadLimit = 5;
-                    if (userData.subscription === 'unlimited') downloadLimit = Infinity;
-                    
-                    // Check if user already downloaded today
-                    if (userData.lastDownloadDate === today && userData.downloadsToday >= downloadLimit && downloadLimit !== Infinity) {
-                        showNotification(`You've reached your daily download limit (${downloadLimit}). Upgrade your plan to download more.`, 'error');
-                        return;
-                    }
+                if (currentUserData.subscription === 'free' && currentUserData.downloadsToday >= 1) {
+                    showNotification('Download Limit', 'Free users can download up to 1 photo per day. Upgrade to download more.', true);
+                    return;
+                }
+                
+                if (currentUserData.subscription === 'explorer' && currentUserData.downloadsToday >= 5) {
+                    showNotification('Download Limit', 'Explorer users can download up to 5 photos per day. Upgrade to unlimited for more.', true);
+                    return;
                 }
                 
                 // Record transaction
                 await addDoc(collection(db, "transactions"), {
-                    userId: currentUser.uid,
+                    userId: auth.currentUser.uid,
                     photoId: photoId,
                     amount: price,
                     type: "photo_purchase",
@@ -2577,50 +2788,39 @@
                 });
                 
                 // Add to user's purchased photos
-                await updateDoc(doc(db, "users", currentUser.uid), {
+                await updateDoc(doc(db, "users", auth.currentUser.uid), {
                     purchasedPhotos: arrayUnion(photoId),
                     downloadsToday: increment(1),
-                    lastDownloadDate: new Date().toISOString().split('T')[0]
+                    totalDownloads: increment(1)
                 });
                 
-                // Update photo stats
-                await updateDoc(doc(db, "photos", photoId), {
-                    downloads: increment(1)
-                });
-                
-                // If photo is monetized, update owner's earnings
+                // Update photo owner's earnings
                 const photoDoc = await getDoc(doc(db, "photos", photoId));
-                if (photoDoc.exists() && photoDoc.data().isMonetized) {
-                    const ownerId = photoDoc.data().ownerId;
-                    await updateDoc(doc(db, "users", ownerId), {
-                        totalEarnings: increment(price * 0.7) // 70% to creator, 30% platform fee
+                if (photoDoc.exists()) {
+                    const photo = photoDoc.data();
+                    await updateDoc(doc(db, "users", photo.ownerId), {
+                        earnings: increment(price * 0.7) // 70% to creator
                     });
                 }
                 
-                showNotification('Purchase successful! The photo is now available in your profile.', 'success');
-                loadUserPhotos(currentUser.uid);
+                showNotification('Success', 'Purchase successful! The photo is now available in your profile.');
             } catch (error) {
                 console.error("Purchase error:", error);
-                showNotification('Purchase failed. Please try again.', 'error');
+                showNotification('Error', 'Purchase failed. Please try again.', true);
             }
         }
 
         async function downloadPhoto(photoId) {
             try {
-                // Check download limit for free photos
-                const userDoc = await getDoc(doc(db, "users", currentUser.uid));
-                if (userDoc.exists()) {
-                    const userData = userDoc.data();
-                    const today = new Date().toISOString().split('T')[0];
-                    
-                    let downloadLimit = 1; // Free users
-                    if (userData.subscription === 'explorer') downloadLimit = 5;
-                    if (userData.subscription === 'unlimited') downloadLimit = Infinity;
-                    
-                    if (userData.lastDownloadDate === today && userData.downloadsToday >= downloadLimit && downloadLimit !== Infinity) {
-                        showNotification(`You've reached your daily download limit (${downloadLimit}). Upgrade your plan to download more.`, 'error');
-                        return;
-                    }
+                // Check download limit
+                if (currentUserData.subscription === 'free' && currentUserData.downloadsToday >= 1) {
+                    showNotification('Download Limit', 'Free users can download up to 1 photo per day. Upgrade to download more.', true);
+                    return;
+                }
+                
+                if (currentUserData.subscription === 'explorer' && currentUserData.downloadsToday >= 5) {
+                    showNotification('Download Limit', 'Explorer users can download up to 5 photos per day. Upgrade to unlimited for more.', true);
+                    return;
                 }
                 
                 const photoDoc = await getDoc(doc(db, "photos", photoId));
@@ -2633,9 +2833,9 @@
                     });
                     
                     // Update user's download count
-                    await updateDoc(doc(db, "users", currentUser.uid), {
+                    await updateDoc(doc(db, "users", auth.currentUser.uid), {
                         downloadsToday: increment(1),
-                        lastDownloadDate: new Date().toISOString().split('T')[0]
+                        totalDownloads: increment(1)
                     });
                     
                     // Trigger download
@@ -2646,343 +2846,42 @@
                     a.click();
                     document.body.removeChild(a);
                     
-                    showNotification('Download started!', 'success');
+                    showNotification('Success', 'Download started!');
                 }
             } catch (error) {
                 console.error("Download error:", error);
-                showNotification('Download failed. Please try again.', 'error');
+                showNotification('Error', 'Download failed. Please try again.', true);
             }
-        }
-
-        async function likePhoto(photoId, like = true) {
-            if (!currentUser) {
-                showLoginModal();
-                return;
-            }
-            
-            try {
-                const photoRef = doc(db, "photos", photoId);
-                
-                if (like) {
-                    await updateDoc(photoRef, {
-                        likes: increment(1),
-                        likesBy: arrayUnion(currentUser.uid)
-                    });
-                    showNotification('Photo liked!', 'success');
-                } else {
-                    await updateDoc(photoRef, {
-                        likes: increment(-1),
-                        likesBy: arrayRemove(currentUser.uid)
-                    });
-                }
-                
-                // Reload feed to update like status
-                loadCommunityFeed();
-                
-                // Send notification to photo owner if it's a new like
-                if (like) {
-                    const photoDoc = await getDoc(photoRef);
-                    if (photoDoc.exists()) {
-                        const photo = photoDoc.data();
-                        if (photo.ownerId !== currentUser.uid) {
-                            await addDoc(collection(db, "notifications"), {
-                                userId: photo.ownerId,
-                                type: 'like',
-                                photoId: photoId,
-                                senderId: currentUser.uid,
-                                senderName: currentUser.displayName,
-                                isRead: false,
-                                createdAt: serverTimestamp()
-                            });
-                            
-                            // Update notification badge
-                            updateNotificationBadges();
-                        }
-                    }
-                }
-            } catch (error) {
-                console.error("Like error:", error);
-            }
-        }
-
-        function focusCommentInput(photoId) {
-            if (!currentUser) {
-                showLoginModal();
-                return;
-            }
-            
-            const commentDiv = document.getElementById(`comment-${photoId}`);
-            if (commentDiv) {
-                commentDiv.style.display = commentDiv.style.display === 'none' ? 'block' : 'none';
-                if (commentDiv.style.display === 'block') {
-                    commentDiv.querySelector('input').focus();
-                }
-            }
-        }
-
-        async function addComment(photoId, commentText) {
-            if (!commentText.trim()) return;
-            
-            try {
-                const photoRef = doc(db, "photos", photoId);
-                
-                // Add comment
-                await updateDoc(photoRef, {
-                    comments: increment(1),
-                    commentsBy: arrayUnion(currentUser.uid)
-                });
-                
-                // Create comment document
-                await addDoc(collection(db, "comments"), {
-                    photoId: photoId,
-                    userId: currentUser.uid,
-                    userPhoto: currentUser.photoURL,
-                    userName: currentUser.displayName,
-                    text: commentText,
-                    createdAt: serverTimestamp()
-                });
-                
-                // Send notification to photo owner
-                const photoDoc = await getDoc(photoRef);
-                if (photoDoc.exists()) {
-                    const photo = photoDoc.data();
-                    if (photo.ownerId !== currentUser.uid) {
-                        await addDoc(collection(db, "notifications"), {
-                            userId: photo.ownerId,
-                            type: 'comment',
-                            photoId: photoId,
-                            senderId: currentUser.uid,
-                            senderName: currentUser.displayName,
-                            isRead: false,
-                            createdAt: serverTimestamp()
-                        });
-                        
-                        // Update notification badge
-                        updateNotificationBadges();
-                    }
-                }
-                
-                // Reload feed
-                loadCommunityFeed();
-                showNotification('Comment added!', 'success');
-            } catch (error) {
-                console.error("Comment error:", error);
-                showNotification('Failed to add comment', 'error');
-            }
-        }
-
-        function sharePhoto(photoUrl) {
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Check out this photo on Amir\'O Graphy',
-                    url: photoUrl
-                }).catch(err => {
-                    console.log('Error sharing:', err);
-                    copyToClipboard(photoUrl);
-                });
-            } else {
-                copyToClipboard(photoUrl);
-            }
-        }
-
-        function copyToClipboard(text) {
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
-            showNotification('Link copied to clipboard!', 'success');
-        }
-
-        async function editPhoto(photoId) {
-            const photoDoc = await getDoc(doc(db, "photos", photoId));
-            if (photoDoc.exists()) {
-                const photo = photoDoc.data();
-                currentPhotoId = photoId;
-                
-                // Show price modal
-                document.getElementById('photo-price').value = photo.price.toFixed(2);
-                document.getElementById('price-modal').classList.add('active');
-            }
-        }
-
-        async function setPhotoPrice(price = null) {
-            const priceValue = price !== null ? price : parseFloat(document.getElementById('photo-price').value);
-            
-            if (isNaN(priceValue) || priceValue < 0) {
-                showNotification('Please enter a valid price', 'error');
-                return;
-            }
-            
-            try {
-                await updateDoc(doc(db, "photos", currentPhotoId), {
-                    price: priceValue,
-                    status: priceValue > 0 ? 'pending' : 'approved'
-                });
-                
-                closeModal();
-                showNotification('Price updated successfully!', 'success');
-                loadUserPhotos(currentUser.uid);
-            } catch (error) {
-                console.error("Price update error:", error);
-                showNotification('Failed to update price', 'error');
-            }
-        }
-
-        async function deletePhoto(photoId, photoUrl) {
-            if (!confirm('Are you sure you want to delete this photo?')) return;
-            
-            try {
-                // Delete from Firestore
-                await deleteDoc(doc(db, "photos", photoId));
-                
-                // Delete from Storage
-                const storageRef = ref(storage, photoUrl);
-                await deleteObject(storageRef);
-                
-                showNotification('Photo deleted successfully', 'success');
-                loadUserPhotos(currentUser.uid);
-                loadCommunityFeed();
-            } catch (error) {
-                console.error("Delete error:", error);
-                showNotification('Failed to delete photo', 'error');
-            }
-        }
-
-        async function applyForMonetization() {
-            if (!currentUser) return;
-            
-            try {
-                await updateDoc(doc(db, "users", currentUser.uid), {
-                    monetizationApplied: true
-                });
-                
-                // Send notification to admin
-                await addDoc(collection(db, "notifications"), {
-                    userId: adminEmail, // Using email as ID for admin
-                    type: 'monetization_application',
-                    applicantId: currentUser.uid,
-                    applicantName: currentUser.displayName,
-                    isRead: false,
-                    createdAt: serverTimestamp()
-                });
-                
-                document.getElementById('monetize-card').style.display = 'none';
-                showNotification('Monetization application submitted! We will review your request soon.', 'success');
-            } catch (error) {
-                console.error("Monetization error:", error);
-                showNotification('Failed to apply for monetization', 'error');
-            }
-        }
-
-        async function updateNotificationBadges() {
-            if (!currentUser) return;
-            
-            try {
-                // Count unread notifications
-                const q = query(
-                    collection(db, "notifications"),
-                    where("userId", "==", currentUser.uid),
-                    where("isRead", "==", false)
-                );
-                const snapshot = await getDocs(q);
-                
-                const feedBadge = document.getElementById('feed-notification');
-                const profileBadge = document.getElementById('profile-notification');
-                
-                if (snapshot.size > 0) {
-                    feedBadge.textContent = snapshot.size;
-                    feedBadge.style.display = 'flex';
-                    profileBadge.textContent = snapshot.size;
-                    profileBadge.style.display = 'flex';
-                } else {
-                    feedBadge.style.display = 'none';
-                    profileBadge.style.display = 'none';
-                }
-            } catch (error) {
-                console.error("Notification error:", error);
-            }
-        }
-
-        async function sendNotification() {
-            const recipient = document.getElementById('notification-recipient').value;
-            const userEmail = document.getElementById('user-email').value;
-            const title = document.getElementById('notification-title').value;
-            const message = document.getElementById('notification-message').value;
-            
-            if (!title || !message) {
-                showNotification('Please fill all fields', 'error');
-                return;
-            }
-            
-            if (recipient === 'specific' && !userEmail) {
-                showNotification('Please enter user email', 'error');
-                return;
-            }
-            
-            try {
-                if (recipient === 'all') {
-                    // In a real app, you would send to all users or use Firebase Messaging
-                    showNotification('Notification sent to all users', 'success');
-                } else {
-                    // Send to specific user
-                    const userQuery = query(collection(db, "users"), where("email", "==", userEmail));
-                    const userSnapshot = await getDocs(userQuery);
-                    
-                    if (userSnapshot.empty) {
-                        showNotification('User not found', 'error');
-                        return;
-                    }
-                    
-                    const userId = userSnapshot.docs[0].id;
-                    
-                    await addDoc(collection(db, "notifications"), {
-                        userId: userId,
-                        type: 'admin',
-                        title: title,
-                        message: message,
-                        isRead: false,
-                        createdAt: serverTimestamp()
-                    });
-                    
-                    showNotification(`Notification sent to ${userEmail}`, 'success');
-                }
-                
-                // Clear form
-                clearAdminForm();
-            } catch (error) {
-                console.error("Notification error:", error);
-                showNotification('Failed to send notification', 'error');
-            }
-        }
-
-        function clearAdminForm() {
-            document.getElementById('notification-recipient').value = 'all';
-            document.getElementById('user-email').value = '';
-            document.getElementById('notification-title').value = '';
-            document.getElementById('notification-message').value = '';
-            document.getElementById('specific-user-group').style.display = 'none';
         }
 
         async function subscribe(plan) {
-            if (!currentUser) {
+            if (!auth.currentUser) {
                 showLoginModal();
                 return;
             }
             
             try {
                 // In a real app, integrate with Stripe/PayPal here
-                await updateDoc(doc(db, "users", currentUser.uid), {
+                await updateDoc(doc(db, "users", auth.currentUser.uid), {
                     subscription: plan === 'explorer' ? 'explorer' : 'unlimited'
                 });
                 
-                showNotification(`Subscription updated to ${plan} plan!`, 'success');
+                // Record subscription
+                await addDoc(collection(db, "subscriptions"), {
+                    userId: auth.currentUser.uid,
+                    plan,
+                    price: plan === 'explorer' ? 2.99 : 7.99,
+                    startDate: serverTimestamp(),
+                    endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
+                    status: 'active'
+                });
+                
+                showNotification('Success', `Subscription updated to ${plan} plan!`);
                 closeModal();
-                updateUserProfile(currentUser);
+                updateUserProfile(auth.currentUser);
             } catch (error) {
                 console.error("Subscription error:", error);
-                showNotification('Subscription failed. Please try again.', 'error');
+                showNotification('Error', 'Subscription failed. Please try again.', true);
             }
         }
 
@@ -2995,7 +2894,13 @@
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
             });
-            event.currentTarget.classList.add('active');
+            
+            // Activate clicked nav item
+            const navItems = document.querySelectorAll('.nav-item');
+            const sectionIndex = ['home', 'marketplace', 'feed', 'profile', 'about'].indexOf(sectionId);
+            if (sectionIndex >= 0) {
+                navItems[sectionIndex].classList.add('active');
+            }
             
             // Show section
             document.querySelectorAll('section[id$="-section"]').forEach(section => {
@@ -3008,18 +2913,16 @@
         }
 
         function switchTab(tabId) {
-            // Update tabs
             document.querySelectorAll('.profile-tab').forEach(tab => {
                 tab.classList.remove('active');
             });
             event.target.classList.add('active');
             
-            // Show tab content
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
+            document.querySelectorAll('#uploads-tab, #favorites-tab, #purchased-tab, #monetization-tab').forEach(tab => {
+                tab.style.display = 'none';
             });
             
-            document.getElementById(`${tabId}-tab`).classList.add('active');
+            document.getElementById(`${tabId}-tab`).style.display = 'block';
         }
 
         function showLoginModal() {
@@ -3027,7 +2930,7 @@
         }
 
         function showSubscriptionModal() {
-            if (!currentUser) {
+            if (!auth.currentUser) {
                 showLoginModal();
                 return;
             }
@@ -3038,6 +2941,14 @@
             document.querySelectorAll('.modal').forEach(modal => {
                 modal.classList.remove('active');
             });
+            
+            // Reset upload form
+            document.getElementById('upload-preview').style.display = 'none';
+            document.getElementById('photo-title').value = '';
+            document.getElementById('photo-price').value = '';
+            tags = [];
+            renderTags();
+            selectedFile = null;
         }
 
         function selectPlan(planId) {
@@ -3051,52 +2962,6 @@
             loadMarketplacePhotos(type);
         }
 
-        // Initialize hero slideshow
-        function initSlideshow() {
-            const slides = [
-                'https://source.unsplash.com/random/1600x900/?nature',
-                'https://source.unsplash.com/random/1600x900/?landscape',
-                'https://source.unsplash.com/random/1600x900/?city',
-                'https://source.unsplash.com/random/1600x900/?portrait',
-                'https://source.unsplash.com/random/1600x900/?wildlife'
-            ];
-            
-            const slideshow = document.getElementById('hero-slideshow');
-            
-            slides.forEach((slide, index) => {
-                const img = document.createElement('img');
-                img.className = 'hero-slide';
-                img.src = slide;
-                img.alt = `Slide ${index + 1}`;
-                slideshow.appendChild(img);
-            });
-            
-            const slideElements = document.querySelectorAll('.hero-slide');
-            let currentSlide = 0;
-            
-            function showSlide(index) {
-                slideElements.forEach(slide => slide.classList.remove('active'));
-                slideElements[index].classList.add('active');
-            }
-            
-            function nextSlide() {
-                currentSlide = (currentSlide + 1) % slides.length;
-                showSlide(currentSlide);
-            }
-            
-            // Show first slide
-            showSlide(0);
-            
-            // Auto-rotate every 5 seconds
-            setInterval(nextSlide, 5000);
-        }
-
-        // Toggle specific user input when recipient changes
-        document.getElementById('notification-recipient').addEventListener('change', function() {
-            document.getElementById('specific-user-group').style.display = 
-                this.value === 'specific' ? 'block' : 'none';
-        });
-
         // ========================================
         // INITIALIZATION
         // ========================================
@@ -3107,24 +2972,22 @@
                 document.querySelector('.loading-screen').classList.add('hidden');
             }, 1500);
 
-            // Initialize slideshow
-            initSlideshow();
-            
             // Set up auth state listener
             onAuthStateChanged(auth, (user) => {
-                currentUser = user;
                 if (user) {
+                    currentUser = user;
                     console.log("User signed in:", user.uid);
                     updateUserProfile(user);
-                    loadUserPhotos(user.uid);
-                    updateNotificationBadges();
                     
                     // Check if user is admin
-                    if (user.email === adminEmail) {
-                        document.getElementById('admin-controls').style.display = 'block';
-                        document.getElementById('monetization-tab').style.display = 'block';
-                    }
+                    getDoc(doc(db, "users", user.uid)).then(doc => {
+                        if (doc.exists() && doc.data().isAdmin) {
+                            document.getElementById('admin-section').style.display = 'block';
+                        }
+                    });
                 } else {
+                    currentUser = null;
+                    currentUserData = null;
                     console.log("User signed out");
                 }
             });
@@ -3136,7 +2999,6 @@
 
             // Set up event listeners
             googleLoginBtn.addEventListener('click', signInWithGoogle);
-            photoUploadInput.addEventListener('change', handlePhotoUpload);
         });
 
         // Make functions available globally for HTML onclick attributes
@@ -3149,15 +3011,24 @@
         window.subscribe = subscribe;
         window.handlePhotoAction = handlePhotoAction;
         window.filterPhotos = filterPhotos;
-        window.likePhoto = likePhoto;
-        window.addComment = addComment;
-        window.sharePhoto = sharePhoto;
-        window.editPhoto = editPhoto;
-        window.setPhotoPrice = setPhotoPrice;
-        window.deletePhoto = deletePhoto;
-        window.applyForMonetization = applyForMonetization;
+        window.toggleLove = toggleLove;
+        window.addTag = addTag;
         window.removeTag = removeTag;
-        window.focusCommentInput = focusCommentInput;
+        window.uploadPhoto = uploadPhoto;
+        window.applyForMonetization = applyForMonetization;
+        window.updatePhotoPrice = updatePhotoPrice;
+        window.notifyAllUsers = notifyAllUsers;
+        window.manageUsers = manageUsers;
+        window.moderateContent = moderateContent;
+        window.sendNotification = sendNotification;
+        window.sendUserNotification = sendUserNotification;
+        window.suspendUser = suspendUser;
+        window.approveMonetization = approveMonetization;
+        window.rejectMonetization = rejectMonetization;
+        window.removeContent = removeContent;
+        window.dismissReport = dismissReport;
+        window.viewUser = viewUser;
+        window.hideNotification = hideNotification;
     </script>
 </body>
 </html>
