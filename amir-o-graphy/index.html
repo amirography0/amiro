@@ -11,7 +11,6 @@
 <body>
     <!-- Loading Screen -->
     <div class="loading-screen">
-        <div class="loading-spinner"></div>
         <div class="loading-text">Loading your visual journey...</div>
     </div>
     
@@ -37,23 +36,23 @@
     <nav>
         <div class="nav-container">
             <div class="nav-items">
-                <div class="nav-item active" id="nav-home">
+                <div class="nav-item active" onclick="showSection('home')">
                     <i class="fas fa-home"></i>
                     <span>Home</span>
                 </div>
-                <div class="nav-item" id="nav-marketplace">
+                <div class="nav-item" onclick="showSection('marketplace')">
                     <i class="fas fa-store"></i>
                     <span>Marketplace</span>
                 </div>
-                <div class="nav-item" id="nav-feed">
+                <div class="nav-item" onclick="showSection('feed')">
                     <i class="fas fa-images"></i>
                     <span>Daily Feed</span>
                 </div>
-                <div class="nav-item" id="nav-profile">
+                <div class="nav-item" onclick="showSection('profile')">
                     <i class="fas fa-user"></i>
                     <span>Profile</span>
                 </div>
-                <div class="nav-item notification-bell" id="notification-bell">
+                <div class="nav-item notification-bell" onclick="toggleNotifications()">
                     <i class="fas fa-bell"></i>
                     <span>Notifications</span>
                     <div class="badge">3</div>
@@ -64,14 +63,31 @@
                             Notifications
                             <span class="notification-clear">Clear All</span>
                         </div>
-                        <!-- Notifications will be loaded dynamically -->
+                        <div class="notification-item unread">
+                            <div class="notification-text">
+                                <strong>John Doe</strong> liked your photo "Sunset at the Beach"
+                            </div>
+                            <div class="notification-time">2 hours ago</div>
+                        </div>
+                        <div class="notification-item">
+                            <div class="notification-text">
+                                Your photo "Mountain View" has been approved for monetization
+                            </div>
+                            <div class="notification-time">1 day ago</div>
+                        </div>
+                        <div class="notification-item">
+                            <div class="notification-text">
+                                New message from <strong>Sarah Smith</strong> about your photo
+                            </div>
+                            <div class="notification-time">3 days ago</div>
+                        </div>
                     </div>
                 </div>
             </div>
             
             <!-- Auth Buttons -->
             <div class="auth-buttons" id="auth-buttons">
-                <button class="auth-btn login-btn" id="login-btn">
+                <button class="auth-btn login-btn" onclick="showLoginModal()">
                     <i class="fas fa-sign-in-alt"></i> Login
                 </button>
             </div>
@@ -89,7 +105,7 @@
                 <!-- Featured photos will be loaded here -->
             </div>
             
-            <button class="upload-btn" id="upload-btn-home">
+            <button class="upload-btn" onclick="showSection('feed')">
                 <i class="fas fa-upload"></i> Upload Your Photo
             </button>
         </section>
@@ -100,13 +116,13 @@
             <p>Browse and purchase premium photos or download free selections.</p>
             
             <div class="filter-options" style="margin: 1.5rem 0; display: flex; gap: 0.8rem;">
-                <button class="action-btn filter-all" style="background-color: var(--secondary);">
+                <button class="action-btn" style="background-color: var(--secondary);" onclick="filterPhotos('all')">
                     <i class="fas fa-layer-group"></i> All
                 </button>
-                <button class="action-btn filter-free" style="background-color: var(--success);">
+                <button class="action-btn" style="background-color: var(--success);" onclick="filterPhotos('free')">
                     <i class="fas fa-tag"></i> Free
                 </button>
-                <button class="action-btn filter-premium" style="background-color: var(--primary);">
+                <button class="action-btn" style="background-color: var(--primary);" onclick="filterPhotos('premium')">
                     <i class="fas fa-crown"></i> Premium
                 </button>
             </div>
@@ -120,7 +136,7 @@
         <section id="feed-section" style="display: none;">
             <div class="upload-area">
                 <input type="file" id="photo-upload" accept="image/*" style="display: none;">
-                <button class="upload-btn" id="upload-btn-feed">
+                <button class="upload-btn" onclick="document.getElementById('photo-upload').click()">
                     <i class="fas fa-plus"></i> Upload Photo
                 </button>
                 
@@ -145,19 +161,19 @@
             </div>
             
             <div class="profile-tabs">
-                <div class="profile-tab active" id="tab-uploads">
+                <div class="profile-tab active" onclick="switchTab('uploads')">
                     My Uploads
-                    <div class="badge" id="uploads-badge">0</div>
+                    <div class="badge">12</div>
                 </div>
-                <div class="profile-tab" id="tab-favorites">
+                <div class="profile-tab" onclick="switchTab('favorites')">
                     Favorites
-                    <div class="badge" id="favorites-badge">0</div>
+                    <div class="badge">5</div>
                 </div>
-                <div class="profile-tab" id="tab-purchased">
+                <div class="profile-tab" onclick="switchTab('purchased')">
                     Purchased
-                    <div class="badge" id="purchased-badge">0</div>
+                    <div class="badge">3</div>
                 </div>
-                <div class="profile-tab" id="tab-monetization">
+                <div class="profile-tab" onclick="switchTab('monetization')">
                     Monetization
                 </div>
             </div>
@@ -190,43 +206,80 @@
                 </div>
             </div>
         </section>
+        
+        <!-- About Us Section -->
+        <section id="about-section" style="display: none;">
+            <div class="about-section">
+                <h2 class="section-title">About Amir'O Graphy</h2>
+                <div class="about-content">
+                    <p>Welcome to Amir'O Graphy, a platform dedicated to photographers and visual storytellers. Our mission is to create a community where artists can share their work, gain exposure, and monetize their creativity.</p>
+                    
+                    <h3>Subscription Plans</h3>
+                    <p>We offer different subscription levels to meet your needs:</p>
+                    <ul>
+                        <li><strong>Free Tier:</strong> Upload 2 photos per day, download 1 photo per day</li>
+                        <li><strong>Explorer ($2.99/month):</strong> Upload 5 photos per day, download 5 photos per day</li>
+                        <li><strong>Unlimited ($7.99/month):</strong> Unlimited uploads and downloads</li>
+                    </ul>
+                    
+                    <h3>Monetization Guidelines</h3>
+                    <p>Earn money from your photos by meeting these requirements:</p>
+                    <ul>
+                        <li><strong>Free Users:</strong> 100+ likes and 20+ comments on a photo</li>
+                        <li><strong>Subscribers:</strong> 50+ likes and 10+ comments on a photo</li>
+                    </ul>
+                    <p>Once approved, you can set prices for your photos with admin approval.</p>
+                    
+                    <h3>Community Guidelines</h3>
+                    <p>We encourage respectful engagement within our community. Please:</p>
+                    <ul>
+                        <li>Credit original photographers when sharing their work</li>
+                        <li>Respect copyright and licensing terms</li>
+                        <li>Provide constructive feedback</li>
+                        <li>Report any inappropriate content</li>
+                    </ul>
+                    
+                    <p>For licensing inquiries or copyright issues, please contact us at <strong>copyright@amirography.com</strong>.</p>
+                </div>
+            </div>
+        </section>
     </div>
     
     <!-- Admin Controls (Only visible to admin) -->
     <div class="admin-controls" id="admin-controls" style="display: none;">
-        <button class="admin-btn" id="admin-btn">
+        <button class="admin-btn" onclick="toggleAdminPanel()">
             <i class="fas fa-cog"></i>
         </button>
         
         <div class="admin-panel" id="admin-panel">
             <div class="admin-title">Admin Panel</div>
-            <div class="admin-option" id="admin-notify-all">
+            <div class="admin-option" onclick="showAdminModal('notify-all')">
                 <i class="fas fa-bullhorn"></i>
                 Notify All Users
             </div>
-            <div class="admin-option" id="admin-notify-user">
+            <div class="admin-option" onclick="showAdminModal('notify-user')">
                 <i class="fas fa-envelope"></i>
                 Notify Specific User
             </div>
-            <div class="admin-option" id="admin-remove-post">
+            <div class="admin-option" onclick="showAdminModal('remove-post')">
                 <i class="fas fa-trash"></i>
                 Remove Post
             </div>
-            <div class="admin-option" id="admin-suspend-user">
+            <div class="admin-option" onclick="showAdminModal('suspend-user')">
                 <i class="fas fa-user-lock"></i>
                 Suspend User
             </div>
         </div>
     </div>
     
-    <!-- Modals -->
+    <!-- Login Modal -->
     <div class="modal" id="login-modal">
         <div class="modal-content">
-            <button class="modal-close" id="login-modal-close">&times;</button>
+            <button class="modal-close" onclick="closeModal()">&times;</button>
             <h3 class="modal-title">Sign In to Continue</h3>
             <p class="modal-subtitle">Join our community of photographers</p>
             
-            <button class="google-login-btn" id="google-login-btn">
+            <button class="google-login-btn" id="google-login">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" class="google-icon">
                 Sign in with Google
             </button>
@@ -240,12 +293,12 @@
     <!-- Subscription Modal -->
     <div class="modal" id="subscription-modal">
         <div class="modal-content">
-            <button class="modal-close" id="subscription-modal-close">&times;</button>
+            <button class="modal-close" onclick="closeModal()">&times;</button>
             <h3 class="modal-title">Upgrade Your Membership</h3>
             <p class="modal-subtitle">Choose the plan that works best for you</p>
             
             <div class="subscription-options">
-                <div class="subscription-card" id="explorer-plan">
+                <div class="subscription-card" onclick="selectPlan('explorer')" id="explorer-plan">
                     <h4 class="subscription-title">
                         <i class="fas fa-map"></i> Explorer
                     </h4>
@@ -256,12 +309,12 @@
                         <li><i class="fas fa-check"></i> Access to free content</li>
                         <li><i class="fas fa-check"></i> Basic support</li>
                     </ul>
-                    <button class="subscribe-btn" id="subscribe-explorer">
+                    <button class="subscribe-btn" onclick="subscribe('explorer')">
                         <i class="fas fa-arrow-right"></i> Select Plan
                     </button>
                 </div>
                 
-                <div class="subscription-card selected" id="unlimited-plan">
+                <div class="subscription-card selected" onclick="selectPlan('unlimited')" id="unlimited-plan">
                     <div class="popular-badge">Most Popular</div>
                     <h4 class="subscription-title">
                         <i class="fas fa-crown"></i> Unlimited
@@ -275,7 +328,7 @@
                         <li><i class="fas fa-check"></i> Exclusive tutorials</li>
                         <li><i class="fas fa-check"></i> Early monetization</li>
                     </ul>
-                    <button class="subscribe-btn" id="subscribe-unlimited">
+                    <button class="subscribe-btn" onclick="subscribe('unlimited')">
                         <i class="fas fa-arrow-right"></i> Select Plan
                     </button>
                 </div>
@@ -290,7 +343,7 @@
     <!-- Admin Notification Modal -->
     <div class="modal" id="admin-notify-modal">
         <div class="modal-content">
-            <button class="modal-close" id="admin-modal-close">&times;</button>
+            <button class="modal-close" onclick="closeModal()">&times;</button>
             <h3 class="modal-title" id="admin-modal-title">Admin Notification</h3>
             
             <div id="notify-all-form">
@@ -304,7 +357,7 @@
                     <textarea id="notification-message" class="tag-input" rows="4" placeholder="Type your message here..."></textarea>
                 </div>
                 
-                <button class="subscribe-btn" id="send-notification-all" style="margin-top: 1rem;">
+                <button class="subscribe-btn" style="margin-top: 1rem;" onclick="sendNotificationToAll()">
                     <i class="fas fa-paper-plane"></i> Send to All Users
                 </button>
             </div>
@@ -325,7 +378,7 @@
                     <textarea id="user-notification-message" class="tag-input" rows="4" placeholder="Type your message here..."></textarea>
                 </div>
                 
-                <button class="subscribe-btn" id="send-notification-user" style="margin-top: 1rem;">
+                <button class="subscribe-btn" style="margin-top: 1rem;" onclick="sendNotificationToUser()">
                     <i class="fas fa-paper-plane"></i> Send Notification
                 </button>
             </div>
@@ -354,11 +407,1123 @@
         </div>
     </footer>
 
-    <!-- JavaScript Files -->
-    <script type="module" src="js/firebase-config.js"></script>
-    <script type="module" src="js/auth.js"></script>
-    <script type="module" src="js/photos.js"></script>
-    <script type="module" src="js/ui.js"></script>
-    <script type="module" src="js/main.js"></script>
+    <!-- Firebase SDKs -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
+        import { 
+            getAuth, 
+            GoogleAuthProvider, 
+            signInWithPopup,
+            signOut,
+            onAuthStateChanged
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { 
+            getFirestore,
+            collection,
+            doc,
+            setDoc,
+            getDoc,
+            getDocs,
+            addDoc,
+            updateDoc,
+            serverTimestamp,
+            query,
+            where,
+            orderBy,
+            arrayUnion,
+            arrayRemove,
+            increment,
+            limit
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { 
+            getStorage,
+            ref,
+            uploadBytes,
+            getDownloadURL
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBN54CFkJqgO_LMu5BUNRkHnxcC56WdD0w",
+            authDomain: "amir-o-graphy.firebaseapp.com",
+            projectId: "amir-o-graphy",
+            storageBucket: "amir-o-graphy.appspot.com",
+            messagingSenderId: "632309878901",
+            appId: "1:632309878901:web:2454b17fc530624346683c",
+            measurementId: "G-YX7ZQ4ZQF2"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+        const provider = new GoogleAuthProvider();
+
+        // DOM Elements
+        const googleLoginBtn = document.getElementById('google-login');
+        const photoUploadInput = document.getElementById('photo-upload');
+        const photoTagsInput = document.getElementById('photo-tags');
+        const currentYearSpan = document.getElementById('current-year');
+        const authButtonsContainer = document.getElementById('auth-buttons');
+
+        // Set current year in footer
+        currentYearSpan.textContent = new Date().getFullYear();
+
+        // Global Variables
+        let currentUser = null;
+        let photos = [];
+        let posts = [];
+
+        // ========================================
+        // AUTHENTICATION FUNCTIONS
+        // ========================================
+
+        async function signInWithGoogle() {
+            try {
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
+                
+                // Check if user exists in Firestore
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                
+                if (!userDoc.exists()) {
+                    // Create new user document
+                    await setDoc(doc(db, "users", user.uid), {
+                        name: user.displayName,
+                        email: user.email,
+                        photoURL: user.photoURL,
+                        subscription: "free",
+                        joinDate: serverTimestamp(),
+                        purchasedPhotos: [],
+                        uploadedPhotos: [],
+                        likesReceived: 0,
+                        commentsReceived: 0,
+                        isMonetized: false,
+                        isSuspended: false,
+                        dailyUploads: 0,
+                        dailyDownloads: 0,
+                        lastUploadDate: null,
+                        lastDownloadDate: null
+                    });
+                }
+                
+                closeModal();
+                updateAuthUI(user);
+                
+                // Show admin controls if admin
+                if (user.email === "ahamed.to.tipak@gmail.com") {
+                    document.getElementById('admin-controls').style.display = 'block';
+                }
+            } catch (error) {
+                console.error("Google sign-in error:", error);
+                alert("Sign-in failed. Please try again.");
+            }
+        }
+
+        async function signOutUser() {
+            try {
+                await signOut(auth);
+                updateAuthUI(null);
+                showSection('home');
+            } catch (error) {
+                console.error("Sign out error:", error);
+                alert("Sign out failed. Please try again.");
+            }
+        }
+
+        function updateAuthUI(user) {
+            currentUser = user;
+            authButtonsContainer.innerHTML = '';
+            
+            if (user) {
+                // User is signed in
+                authButtonsContainer.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 0.8rem;">
+                        <img src="${user.photoURL || 'https://source.unsplash.com/random/300x300/?portrait'}" 
+                             class="user-avatar" alt="User" onclick="showSection('profile')">
+                        <button class="auth-btn logout-btn" onclick="signOutUser()">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                `;
+                
+                // Update profile section if it's visible
+                if (document.getElementById('profile-section').style.display !== 'none') {
+                    updateUserProfile(user);
+                    loadUserPhotos(user.uid);
+                    checkMonetizationStatus();
+                }
+            } else {
+                // User is signed out
+                authButtonsContainer.innerHTML = `
+                    <button class="auth-btn login-btn" onclick="showLoginModal()">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                `;
+                
+                // Hide profile section if user logs out
+                if (document.getElementById('profile-section').style.display !== 'none') {
+                    showSection('home');
+                }
+            }
+        }
+
+        // ========================================
+        // PHOTO UPLOAD WITH MANUAL TAGS
+        // ========================================
+
+        async function handlePhotoUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            if (!auth.currentUser) {
+                showLoginModal();
+                return;
+            }
+            
+            try {
+                // Show loading state
+                const loadingScreen = document.querySelector('.loading-screen');
+                loadingScreen.classList.remove('hidden');
+                loadingScreen.querySelector('.loading-text').textContent = "Uploading your photo...";
+
+                // Get tags from input
+                const tagsInput = photoTagsInput.value.trim();
+                const tags = tagsInput ? tagsInput.split(',').map(tag => tag.trim()) : ['photography'];
+                
+                // 1. Upload to Firebase Storage
+                const storageRef = ref(storage, `photos/${auth.currentUser.uid}/${Date.now()}_${file.name}`);
+                const snapshot = await uploadBytes(storageRef, file);
+                const downloadURL = await getDownloadURL(snapshot.ref);
+                
+                // 2. Save to Firestore with tags
+                await addDoc(collection(db, "photos"), {
+                    url: downloadURL,
+                    title: file.name.split('.')[0],
+                    tags: tags,
+                    price: 0, // Free by default
+                    ownerId: auth.currentUser.uid,
+                    ownerName: auth.currentUser.displayName || 'Anonymous',
+                    ownerPhotoURL: auth.currentUser.photoURL,
+                    ownerSubscription: "free", // Will be updated from user data
+                    createdAt: serverTimestamp(),
+                    downloads: 0,
+                    likes: 0,
+                    comments: 0,
+                    isPublic: true,
+                    isMonetized: false,
+                    isApproved: false,
+                    likedBy: []
+                });
+                
+                alert("Photo uploaded successfully!");
+                loadUserPhotos(auth.currentUser.uid);
+                loadCommunityFeed();
+                photoTagsInput.value = ''; // Clear tags input
+            } catch (error) {
+                console.error("Upload error:", error);
+                alert("Upload failed: " + error.message);
+            } finally {
+                document.querySelector('.loading-screen').classList.add('hidden');
+            }
+        }
+
+        // ========================================
+        // FIREBASE DATA FUNCTIONS
+        // ========================================
+
+        async function updateUserProfile(user) {
+            const userDoc = await getDoc(doc(db, "users", user.uid));
+            if (userDoc.exists()) {
+                const userData = userDoc.data();
+                const profileHeader = document.getElementById('user-profile');
+                
+                // Get user's photo count
+                const photosQuery = query(collection(db, "photos"), where("ownerId", "==", user.uid));
+                const photosSnapshot = await getDocs(photosQuery);
+                const photoCount = photosSnapshot.size;
+                
+                profileHeader.innerHTML = `
+                    <img src="${user.photoURL || 'https://source.unsplash.com/random/300x300/?portrait'}" 
+                         alt="Profile" class="profile-pic">
+                    <h2 class="profile-name">
+                        ${user.displayName || 'User'}
+                        ${userData.subscription !== 'free' ? '<span class="pro-badge"><i class="fas fa-crown"></i> PRO</span>' : ''}
+                    </h2>
+                    <p class="profile-bio">${userData.bio || 'No bio yet'}</p>
+                    
+                    <div class="member-badge">
+                        <i class="fas fa-${userData.subscription === 'unlimited' ? 'crown' : 'user'}"></i> 
+                        ${userData.subscription === 'unlimited' ? 'UNLIMITED MEMBER' : 
+                          userData.subscription === 'explorer' ? 'EXPLORER MEMBER' : 'FREE MEMBER'}
+                    </div>
+                    
+                    <div class="profile-stats">
+                        <div class="stat-item" onclick="switchTab('uploads')">
+                            <div class="stat-value">${photoCount}</div>
+                            <div class="stat-label">Photos</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${userData.likesReceived || 0}</div>
+                            <div class="stat-label">Likes</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${userData.commentsReceived || 0}</div>
+                            <div class="stat-label">Comments</div>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-actions">
+                        <button class="profile-btn primary-btn" onclick="showSubscriptionModal()">
+                            ${userData.subscription === 'free' ? 'Upgrade Plan' : 'Manage Plan'}
+                        </button>
+                        <button class="profile-btn secondary-btn" onclick="editProfile()">
+                            Edit Profile
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        async function loadFeaturedPhotos() {
+            try {
+                const q = query(collection(db, "photos"), 
+                          where("isPublic", "==", true),
+                          orderBy("createdAt", "desc"),
+                          limit(5));
+                const snapshot = await getDocs(q);
+                
+                const featuredContainer = document.getElementById('featured-photos');
+                featuredContainer.innerHTML = '';
+                
+                snapshot.forEach(doc => {
+                    const photo = doc.data();
+                    featuredContainer.innerHTML += createPhotoCard(photo, doc.id);
+                });
+            } catch (error) {
+                console.error("Error loading featured photos:", error);
+            }
+        }
+
+        async function loadMarketplacePhotos(filter = 'all') {
+            try {
+                let q;
+                if (filter === 'free') {
+                    q = query(collection(db, "photos"), 
+                        where("isPublic", "==", true),
+                        where("price", "==", 0),
+                        orderBy("createdAt", "desc"));
+                } else if (filter === 'premium') {
+                    q = query(collection(db, "photos"), 
+                        where("isPublic", "==", true),
+                        where("price", ">", 0),
+                        orderBy("price"),
+                        orderBy("createdAt", "desc"));
+                } else {
+                    q = query(collection(db, "photos"), 
+                        where("isPublic", "==", true),
+                        orderBy("createdAt", "desc"));
+                }
+                
+                const snapshot = await getDocs(q);
+                const marketplaceContainer = document.getElementById('marketplace-photos');
+                marketplaceContainer.innerHTML = '';
+                
+                snapshot.forEach(doc => {
+                    const photo = doc.data();
+                    marketplaceContainer.innerHTML += createPhotoCard(photo, doc.id);
+                });
+            } catch (error) {
+                console.error("Error loading marketplace photos:", error);
+            }
+        }
+
+        function createPhotoCard(photo, photoId) {
+            const isOwner = currentUser && photo.ownerId === currentUser.uid;
+            const isPurchased = currentUser && currentUser.purchasedPhotos && currentUser.purchasedPhotos.includes(photoId);
+            
+            return `
+                <div class="photo-card">
+                    ${photo.ownerSubscription !== 'free' ? 
+                        `<div class="pro-badge"><i class="fas fa-crown"></i> PRO</div>` : ''}
+                    <img src="${photo.url}" alt="${photo.title}" class="photo-thumbnail">
+                    <div class="photo-details">
+                        <h3 class="photo-title">${photo.title}</h3>
+                        <p class="photo-author">
+                            <i class="fas fa-user"></i> ${photo.ownerName}
+                        </p>
+                        <div class="photo-stats">
+                            <div class="photo-stat">
+                                <i class="fas fa-heart"></i> ${photo.likes || 0}
+                            </div>
+                            <div class="photo-stat">
+                                <i class="fas fa-comment"></i> ${photo.comments || 0}
+                            </div>
+                            <div class="photo-stat">
+                                <i class="fas fa-download"></i> ${photo.downloads || 0}
+                            </div>
+                        </div>
+                        ${photo.price > 0 ? 
+                            `<div class="photo-price">$${photo.price.toFixed(2)}</div>
+                             ${isOwner || isPurchased ?
+                                `<button class="action-btn download-btn" onclick="downloadPhoto('${photoId}')">
+                                    <i class="fas fa-download"></i> Download
+                                </button>` :
+                                `<button class="action-btn buy-btn" onclick="handlePhotoAction('${photoId}', ${photo.price})">
+                                    <i class="fas fa-shopping-cart"></i> Buy Now
+                                </button>`}` :
+                            `<span class="free-badge"><i class="fas fa-tag"></i> FREE</span>
+                             <button class="action-btn download-btn" onclick="downloadPhoto('${photoId}')">
+                                <i class="fas fa-download"></i> Download
+                             </button>`}
+                    </div>
+                </div>
+            `;
+        }
+
+        async function loadUserPhotos(userId) {
+            try {
+                const q = query(collection(db, "photos"), 
+                              where("ownerId", "==", userId),
+                              orderBy("createdAt", "desc"));
+                const snapshot = await getDocs(q);
+                
+                const userUploadsContainer = document.getElementById('user-uploads');
+                userUploadsContainer.innerHTML = '';
+                
+                snapshot.forEach(doc => {
+                    const photo = doc.data();
+                    userUploadsContainer.innerHTML += `
+                        <div class="photo-card">
+                            <img src="${photo.url}" alt="${photo.title}" class="photo-thumbnail">
+                            <div class="photo-details">
+                                <h3 class="photo-title">${photo.title}</h3>
+                                <div class="photo-stats">
+                                    <div class="photo-stat">
+                                        <i class="fas fa-heart"></i> ${photo.likes || 0}
+                                    </div>
+                                    <div class="photo-stat">
+                                        <i class="fas fa-comment"></i> ${photo.comments || 0}
+                                    </div>
+                                    <div class="photo-stat">
+                                        <i class="fas fa-download"></i> ${photo.downloads || 0}
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                                    <button class="action-btn" style="background-color: #95a5a6; flex: 1;"
+                                            onclick="editPhoto('${doc.id}')">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </button>
+                                    <button class="action-btn" style="background-color: var(--accent); flex: 1;"
+                                            onclick="deletePhoto('${doc.id}')">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                </div>
+                                ${photo.isMonetized ? 
+                                    `<div style="margin-top: 0.5rem; text-align: center;">
+                                        <span class="free-badge" style="background-color: var(--primary);">
+                                            <i class="fas fa-dollar-sign"></i> Monetized
+                                        </span>
+                                    </div>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                console.error("Error loading user photos:", error);
+            }
+        }
+
+        async function loadCommunityFeed() {
+            try {
+                const q = query(collection(db, "photos"), 
+                              where("isPublic", "==", true),
+                              orderBy("createdAt", "desc"),
+                              limit(10));
+                const snapshot = await getDocs(q);
+                
+                const feedContainer = document.getElementById('community-feed');
+                feedContainer.innerHTML = '';
+                
+                snapshot.forEach(doc => {
+                    const photo = doc.data();
+                    feedContainer.innerHTML += createFeedPost(photo, doc.id);
+                });
+            } catch (error) {
+                console.error("Error loading community feed:", error);
+            }
+        }
+
+        function createFeedPost(photo, photoId) {
+            const isLiked = currentUser && photo.likedBy && photo.likedBy.includes(currentUser.uid);
+            
+            return `
+                <div class="feed-post">
+                    <div class="post-header">
+                        <img src="${photo.ownerPhotoURL || 'https://source.unsplash.com/random/300x300/?portrait'}" 
+                             alt="User" class="post-user-avatar">
+                        <div class="post-user-info">
+                            <div class="post-username">
+                                ${photo.ownerName}
+                                ${photo.ownerSubscription !== 'free' ? 
+                                    '<span class="pro-badge" style="font-size: 0.7rem; padding: 0.2rem 0.5rem;"><i class="fas fa-crown"></i> PRO</span>' : ''}
+                            </div>
+                            <div class="post-time">${formatDate(photo.createdAt?.toDate())}</div>
+                        </div>
+                    </div>
+                    <img src="${photo.url}" alt="Post" class="post-image">
+                    <div class="post-caption">
+                        <p><strong>${photo.title}</strong></p>
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.8rem;">
+                            ${photo.tags.map(tag => 
+                                `<span style="background-color: #f0f0f0; padding: 0.3rem 0.8rem; border-radius: 20px; 
+                                  font-size: 0.8rem;">#${tag}</span>`
+                            ).join('')}
+                        </div>
+                    </div>
+                    <div class="post-actions">
+                        <div class="post-action ${isLiked ? 'liked' : ''}" onclick="likePhoto('${photoId}', ${!isLiked})">
+                            <i class="fas fa-heart"></i>
+                            <span>${photo.likes || 0}</span>
+                        </div>
+                        <div class="post-action" onclick="focusCommentInput('${photoId}')">
+                            <i class="fas fa-comment"></i>
+                            <span>${photo.comments || 0}</span>
+                        </div>
+                        <div class="post-action">
+                            <i class="fas fa-share"></i>
+                            <span>Share</span>
+                        </div>
+                    </div>
+                    <div class="post-comments">
+                        <div id="comments-${photoId}">
+                            <!-- Comments will be loaded here -->
+                        </div>
+                        <div class="comment-input">
+                            <input type="text" id="comment-input-${photoId}" placeholder="Add a comment...">
+                            <button class="comment-btn" onclick="addComment('${photoId}')">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function formatDate(date) {
+            if (!date) return 'Just now';
+            const now = new Date();
+            const diff = now - date;
+            const minutes = Math.floor(diff / (1000 * 60));
+            
+            if (minutes < 1) return 'Just now';
+            if (minutes < 60) return `${minutes}m ago`;
+            if (minutes < 1440) return `${Math.floor(minutes / 60)}h ago`;
+            return `${Math.floor(minutes / 1440)}d ago`;
+        }
+
+        async function handlePhotoAction(photoId, price) {
+            if (!auth.currentUser) {
+                showLoginModal();
+                return;
+            }
+            
+            if (price > 0) {
+                if (confirm(`Purchase this photo for $${price.toFixed(2)}?`)) {
+                    await purchasePhoto(photoId, price);
+                }
+            } else {
+                await downloadPhoto(photoId);
+            }
+        }
+
+        async function purchasePhoto(photoId, price) {
+            try {
+                // Check user's subscription for download limits
+                const userDoc = await getDoc(doc(db, "users", auth.currentUser.uid));
+                const userData = userDoc.data();
+                
+                if (userData.subscription === 'free' && userData.dailyDownloads >= 1) {
+                    alert("You've reached your daily download limit. Upgrade to download more.");
+                    showSubscriptionModal();
+                    return;
+                }
+                
+                if (userData.subscription === 'explorer' && userData.dailyDownloads >= 5) {
+                    alert("You've reached your daily download limit for Explorer plan.");
+                    return;
+                }
+                
+                // Record transaction
+                await addDoc(collection(db, "transactions"), {
+                    userId: auth.currentUser.uid,
+                    photoId: photoId,
+                    amount: price,
+                    type: "photo_purchase",
+                    date: serverTimestamp()
+                });
+                
+                // Add to user's purchased photos
+                await updateDoc(doc(db, "users", auth.currentUser.uid), {
+                    purchasedPhotos: arrayUnion(photoId),
+                    dailyDownloads: increment(1),
+                    lastDownloadDate: serverTimestamp()
+                });
+                
+                // Update photo download count
+                await updateDoc(doc(db, "photos", photoId), {
+                    downloads: increment(1)
+                });
+                
+                alert("Purchase successful! The photo is now available in your profile.");
+                loadMarketplacePhotos();
+            } catch (error) {
+                console.error("Purchase error:", error);
+                alert("Purchase failed. Please try again.");
+            }
+        }
+
+        async function downloadPhoto(photoId) {
+            try {
+                // Check if user is logged in
+                if (!auth.currentUser) {
+                    showLoginModal();
+                    return;
+                }
+                
+                // Check user's subscription for download limits
+                const userDoc = await getDoc(doc(db, "users", auth.currentUser.uid));
+                const userData = userDoc.data();
+                
+                // Check if download limit is reset (new day)
+                const lastDownloadDate = userData.lastDownloadDate?.toDate();
+                const today = new Date();
+                if (lastDownloadDate && 
+                    (lastDownloadDate.getDate() !== today.getDate() || 
+                     lastDownloadDate.getMonth() !== today.getMonth() || 
+                     lastDownloadDate.getFullYear() !== today.getFullYear())) {
+                    // Reset counters for new day
+                    await updateDoc(doc(db, "users", auth.currentUser.uid), {
+                        dailyDownloads: 0,
+                        dailyUploads: 0
+                    });
+                }
+                
+                if (userData.subscription === 'free' && userData.dailyDownloads >= 1) {
+                    alert("You've reached your daily download limit (1). Upgrade to download more.");
+                    showSubscriptionModal();
+                    return;
+                }
+                
+                if (userData.subscription === 'explorer' && userData.dailyDownloads >= 5) {
+                    alert("You've reached your daily download limit for Explorer plan (5).");
+                    return;
+                }
+                
+                const photoDoc = await getDoc(doc(db, "photos", photoId));
+                if (photoDoc.exists()) {
+                    const photo = photoDoc.data();
+                    
+                    // Record download
+                    await updateDoc(doc(db, "photos", photoId), {
+                        downloads: increment(1)
+                    });
+                    
+                    // Update user's download count
+                    await updateDoc(doc(db, "users", auth.currentUser.uid), {
+                        dailyDownloads: increment(1),
+                        lastDownloadDate: serverTimestamp()
+                    });
+                    
+                    // Trigger download
+                    const a = document.createElement('a');
+                    a.href = photo.url;
+                    a.download = photo.title || "photo";
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    
+                    // Show success message
+                    alert("Download started! Thank you for supporting our photographers.");
+                }
+            } catch (error) {
+                console.error("Download error:", error);
+                alert("Download failed. Please try again.");
+            }
+        }
+
+        async function likePhoto(photoId, like) {
+            if (!auth.currentUser) {
+                showLoginModal();
+                return;
+            }
+            
+            try {
+                const photoRef = doc(db, "photos", photoId);
+                const userRef = doc(db, "users", auth.currentUser.uid);
+                
+                if (like) {
+                    // Add like
+                    await updateDoc(photoRef, {
+                        likes: increment(1),
+                        likedBy: arrayUnion(auth.currentUser.uid)
+                    });
+                    
+                    // Update photographer's likes count
+                    const photoDoc = await getDoc(photoRef);
+                    const photoData = photoDoc.data();
+                    const photographerRef = doc(db, "users", photoData.ownerId);
+                    
+                    await updateDoc(photographerRef, {
+                        likesReceived: increment(1)
+                    });
+                    
+                    // Send notification to photographer
+                    await addDoc(collection(db, "notifications"), {
+                        userId: photoData.ownerId,
+                        message: `${auth.currentUser.displayName} liked your photo "${photoData.title}"`,
+                        type: "like",
+                        photoId: photoId,
+                        read: false,
+                        createdAt: serverTimestamp()
+                    });
+                } else {
+                    // Remove like
+                    await updateDoc(photoRef, {
+                        likes: increment(-1),
+                        likedBy: arrayRemove(auth.currentUser.uid)
+                    });
+                    
+                    // Update photographer's likes count
+                    const photoDoc = await getDoc(photoRef);
+                    const photoData = photoDoc.data();
+                    const photographerRef = doc(db, "users", photoData.ownerId);
+                    
+                    await updateDoc(photographerRef, {
+                        likesReceived: increment(-1)
+                    });
+                }
+                
+                // Reload feed to update likes
+                loadCommunityFeed();
+            } catch (error) {
+                console.error("Like error:", error);
+            }
+        }
+
+        async function addComment(photoId) {
+            if (!auth.currentUser) {
+                showLoginModal();
+                return;
+            }
+            
+            const commentInput = document.getElementById(`comment-input-${photoId}`);
+            const commentText = commentInput.value.trim();
+            
+            if (!commentText) return;
+            
+            try {
+                const photoRef = doc(db, "photos", photoId);
+                
+                // Add comment
+                await addDoc(collection(db, "comments"), {
+                    photoId: photoId,
+                    userId: auth.currentUser.uid,
+                    userName: auth.currentUser.displayName,
+                    userPhoto: auth.currentUser.photoURL,
+                    text: commentText,
+                    createdAt: serverTimestamp()
+                });
+                
+                // Update comment count
+                await updateDoc(photoRef, {
+                    comments: increment(1)
+                });
+                
+                // Update photographer's comments count
+                const photoDoc = await getDoc(photoRef);
+                const photoData = photoDoc.data();
+                const photographerRef = doc(db, "users", photoData.ownerId);
+                
+                await updateDoc(photographerRef, {
+                    commentsReceived: increment(1)
+                });
+                
+                // Send notification to photographer
+                await addDoc(collection(db, "notifications"), {
+                    userId: photoData.ownerId,
+                    message: `${auth.currentUser.displayName} commented on your photo "${photoData.title}"`,
+                    type: "comment",
+                    photoId: photoId,
+                    read: false,
+                    createdAt: serverTimestamp()
+                });
+                
+                // Clear input
+                commentInput.value = '';
+                
+                // Reload comments
+                loadComments(photoId);
+            } catch (error) {
+                console.error("Comment error:", error);
+            }
+        }
+
+        async function loadComments(photoId) {
+            try {
+                const q = query(collection(db, "comments"), 
+                              where("photoId", "==", photoId),
+                              orderBy("createdAt", "desc"));
+                const snapshot = await getDocs(q);
+                
+                const commentsContainer = document.getElementById(`comments-${photoId}`);
+                commentsContainer.innerHTML = '';
+                
+                snapshot.forEach(doc => {
+                    const comment = doc.data();
+                    commentsContainer.innerHTML += `
+                        <div style="display: flex; gap: 0.8rem; margin-bottom: 1rem;">
+                            <img src="${comment.userPhoto || 'https://source.unsplash.com/random/300x300/?portrait'}" 
+                                 style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+                            <div>
+                                <div style="font-weight: 600;">${comment.userName}</div>
+                                <div>${comment.text}</div>
+                                <div style="font-size: 0.8rem; color: #666; margin-top: 0.3rem;">
+                                    ${formatDate(comment.createdAt?.toDate())}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                console.error("Error loading comments:", error);
+            }
+        }
+
+        async function subscribe(plan) {
+            if (!auth.currentUser) {
+                showLoginModal();
+                return;
+            }
+            
+            try {
+                // In a real app, integrate with Stripe/PayPal here
+                await updateDoc(doc(db, "users", auth.currentUser.uid), {
+                    subscription: plan
+                });
+                
+                alert(`Subscription updated to ${plan} plan!`);
+                closeModal();
+                updateUserProfile(auth.currentUser);
+            } catch (error) {
+                console.error("Subscription error:", error);
+                alert("Subscription failed. Please try again.");
+            }
+        }
+
+        async function checkMonetizationStatus() {
+            if (!auth.currentUser) return;
+            
+            const userDoc = await getDoc(doc(db, "users", auth.currentUser.uid));
+            const userData = userDoc.data();
+            
+            const monetizationStatus = document.getElementById('monetization-status');
+            const monetizationApply = document.getElementById('monetization-apply');
+            
+            if (userData.isMonetized) {
+                monetizationStatus.innerHTML = `
+                    <div style="background-color: #e8f8f5; padding: 1.5rem; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 1.5rem; color: var(--success); margin-bottom: 1rem;">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h3 style="color: var(--success); margin-bottom: 0.5rem;">Monetization Approved</h3>
+                        <p>You can now set prices for your photos. Each price change requires admin approval.</p>
+                    </div>
+                `;
+                
+                monetizationApply.innerHTML = '';
+            } else {
+                // Check if user meets requirements
+                const requirements = userData.subscription === 'free' ? 
+                    { likes: 100, comments: 20 } : { likes: 50, comments: 10 };
+                
+                const meetsRequirements = userData.likesReceived >= requirements.likes && 
+                                        userData.commentsReceived >= requirements.comments;
+                
+                monetizationStatus.innerHTML = `
+                    <div style="background-color: #fef9e7; padding: 1.5rem; border-radius: 8px;">
+                        <h3 style="margin-bottom: 1rem;">Monetization Requirements</h3>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                            <div style="background-color: white; padding: 1rem; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 1.2rem; font-weight: bold; color: ${userData.likesReceived >= requirements.likes ? 'var(--success)' : 'var(--accent)'};">
+                                    ${userData.likesReceived}/${requirements.likes}
+                                </div>
+                                <div>Likes Received</div>
+                            </div>
+                            <div style="background-color: white; padding: 1rem; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 1.2rem; font-weight: bold; color: ${userData.commentsReceived >= requirements.comments ? 'var(--success)' : 'var(--accent)'};">
+                                    ${userData.commentsReceived}/${requirements.comments}
+                                </div>
+                                <div>Comments Received</div>
+                            </div>
+                        </div>
+                        <p style="font-size: 0.9rem; color: #666;">
+                            ${userData.subscription === 'free' ? 
+                                'Upgrade to Explorer or Unlimited for lower requirements.' : ''}
+                        </p>
+                    </div>
+                `;
+                
+                if (meetsRequirements) {
+                    monetizationApply.innerHTML = `
+                        <button class="subscribe-btn" onclick="applyForMonetization()" style="margin-top: 1.5rem;">
+                            <i class="fas fa-dollar-sign"></i> Apply for Monetization
+                        </button>
+                    `;
+                } else {
+                    monetizationApply.innerHTML = `
+                        <p style="text-align: center; color: #666; margin-top: 1.5rem;">
+                            You don't meet the requirements yet. Keep sharing your photos!
+                        </p>
+                    `;
+                }
+            }
+        }
+
+        async function applyForMonetization() {
+            if (!auth.currentUser) return;
+            
+            try {
+                await updateDoc(doc(db, "users", auth.currentUser.uid), {
+                    monetizationApplied: true,
+                    monetizationAppliedAt: serverTimestamp()
+                });
+                
+                // Notify admin
+                await addDoc(collection(db, "adminNotifications"), {
+                    type: "monetization_application",
+                    userId: auth.currentUser.uid,
+                    userName: auth.currentUser.displayName,
+                    read: false,
+                    createdAt: serverTimestamp()
+                });
+                
+                alert("Monetization application submitted! Admin will review your request soon.");
+                checkMonetizationStatus();
+            } catch (error) {
+                console.error("Monetization application error:", error);
+                alert("Application failed. Please try again.");
+            }
+        }
+
+        // ========================================
+        // UI FUNCTIONS
+        // ========================================
+
+        function showSection(sectionId) {
+            // Update nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Highlight current nav item
+            if (sectionId === 'home') document.querySelector('.nav-item:nth-child(1)').classList.add('active');
+            if (sectionId === 'marketplace') document.querySelector('.nav-item:nth-child(2)').classList.add('active');
+            if (sectionId === 'feed') document.querySelector('.nav-item:nth-child(3)').classList.add('active');
+            if (sectionId === 'profile') document.querySelector('.nav-item:nth-child(4)').classList.add('active');
+            
+            // Show section
+            document.querySelectorAll('section[id$="-section"]').forEach(section => {
+                section.style.display = 'none';
+            });
+            document.getElementById(`${sectionId}-section`).style.display = 'block';
+            
+            // Load data if needed
+            if (sectionId === 'marketplace') loadMarketplacePhotos();
+            if (sectionId === 'feed') loadCommunityFeed();
+            if (sectionId === 'profile' && auth.currentUser) {
+                updateUserProfile(auth.currentUser);
+                loadUserPhotos(auth.currentUser.uid);
+                checkMonetizationStatus();
+            }
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.profile-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            document.querySelectorAll('#uploads-tab, #favorites-tab, #purchased-tab, #monetization-tab').forEach(tab => {
+                tab.style.display = 'none';
+            });
+            
+            document.getElementById(`${tabId}-tab`).style.display = 'block';
+        }
+
+        function showLoginModal() {
+            document.getElementById('login-modal').classList.add('active');
+        }
+
+        function showSubscriptionModal() {
+            if (!auth.currentUser) {
+                showLoginModal();
+                return;
+            }
+            document.getElementById('subscription-modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.classList.remove('active');
+            });
+        }
+
+        function selectPlan(planId) {
+            document.querySelectorAll('.subscription-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.getElementById(`${planId}-plan`).classList.add('selected');
+        }
+
+        function filterPhotos(type) {
+            loadMarketplacePhotos(type);
+        }
+
+        function toggleNotifications() {
+            document.querySelector('.notification-dropdown').classList.toggle('active');
+        }
+
+        function toggleAdminPanel() {
+            document.getElementById('admin-panel').classList.toggle('active');
+        }
+
+        function showAdminModal(type) {
+            document.getElementById('admin-notify-modal').classList.add('active');
+            document.getElementById('admin-modal-title').textContent = 
+                type === 'notify-all' ? 'Notify All Users' :
+                type === 'notify-user' ? 'Notify Specific User' :
+                type === 'remove-post' ? 'Remove Post' : 'Suspend User';
+            
+            document.getElementById('notify-all-form').style.display = 
+                type === 'notify-all' ? 'block' : 'none';
+            document.getElementById('notify-user-form').style.display = 
+                type === 'notify-user' ? 'block' : 'none';
+            
+            toggleAdminPanel();
+        }
+
+        async function sendNotificationToAll() {
+            const title = document.getElementById('notification-title').value;
+            const message = document.getElementById('notification-message').value;
+            
+            if (!title || !message) {
+                alert("Please fill in all fields");
+                return;
+            }
+            
+            try {
+                // In a real app, you would use Firebase Cloud Messaging or store in database
+                alert(`Notification sent to all users: "${title}" - ${message}`);
+                closeModal();
+            } catch (error) {
+                console.error("Notification error:", error);
+                alert("Failed to send notification");
+            }
+        }
+
+        async function sendNotificationToUser() {
+            const email = document.getElementById('user-email').value;
+            const title = document.getElementById('user-notification-title').value;
+            const message = document.getElementById('user-notification-message').value;
+            
+            if (!email || !title || !message) {
+                alert("Please fill in all fields");
+                return;
+            }
+            
+            try {
+                // In a real app, you would find the user by email and send notification
+                alert(`Notification sent to ${email}: "${title}" - ${message}`);
+                closeModal();
+            } catch (error) {
+                console.error("Notification error:", error);
+                alert("Failed to send notification");
+            }
+        }
+
+        function focusCommentInput(photoId) {
+            const commentInput = document.getElementById(`comment-input-${photoId}`);
+            commentInput.focus();
+            loadComments(photoId);
+        }
+
+        // ========================================
+        // INITIALIZATION
+        // ========================================
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Simulate loading screen
+            setTimeout(() => {
+                document.querySelector('.loading-screen').classList.add('hidden');
+            }, 2000);
+
+            // Set up auth state listener
+            onAuthStateChanged(auth, (user) => {
+                updateAuthUI(user);
+                
+                // Show admin controls if admin
+                if (user && user.email === "ahamed.to.tipak@gmail.com") {
+                    document.getElementById('admin-controls').style.display = 'block';
+                }
+            });
+
+            // Load initial data
+            loadFeaturedPhotos();
+            loadMarketplacePhotos();
+            loadCommunityFeed();
+
+            // Set up event listeners
+            googleLoginBtn.addEventListener('click', signInWithGoogle);
+            photoUploadInput.addEventListener('change', handlePhotoUpload);
+            
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.notification-bell')) {
+                    document.querySelector('.notification-dropdown').classList.remove('active');
+                }
+                if (!e.target.closest('.admin-controls')) {
+                    document.getElementById('admin-panel').classList.remove('active');
+                }
+            });
+        });
+
+        // Make functions available globally for HTML onclick attributes
+        window.showSection = showSection;
+        window.switchTab = switchTab;
+        window.showLoginModal = showLoginModal;
+        window.showSubscriptionModal = showSubscriptionModal;
+        window.closeModal = closeModal;
+        window.selectPlan = selectPlan;
+        window.subscribe = subscribe;
+        window.handlePhotoAction = handlePhotoAction;
+        window.filterPhotos = filterPhotos;
+        window.toggleNotifications = toggleNotifications;
+        window.toggleAdminPanel = toggleAdminPanel;
+        window.showAdminModal = showAdminModal;
+        window.sendNotificationToAll = sendNotificationToAll;
+        window.sendNotificationToUser = sendNotificationToUser;
+        window.focusCommentInput = focusCommentInput;
+        window.likePhoto = likePhoto;
+        window.addComment = addComment;
+        window.downloadPhoto = downloadPhoto;
+        window.checkMonetizationStatus = checkMonetizationStatus;
+        window.applyForMonetization = applyForMonetization;
+        window.signOutUser = signOutUser;
+    </script>
 </body>
 </html>
