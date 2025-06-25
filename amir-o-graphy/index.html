@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amir'O Graphy - Photography Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading your visual journey...</div>
+    </div>
+    
+    <!-- Header -->
+    <header>
+        <img src="https://source.unsplash.com/random/1600x900/?photography" alt="Hero Image" class="hero-image">
+        <div class="header-content">
+            <h1>Amir'O Graphy</h1>
+            <p class="tagline">Capturing moments, creating memories</p>
+            
+            <!-- Photo Carousel -->
+            <div class="photo-carousel">
+                <img src="https://source.unsplash.com/random/500x300/?nature" alt="Nature" class="carousel-photo">
+                <img src="https://source.unsplash.com/random/500x300/?portrait" alt="Portrait" class="carousel-photo">
+                <img src="https://source.unsplash.com/random/500x300/?city" alt="City" class="carousel-photo">
+                <img src="https://source.unsplash.com/random/500x300/?wildlife" alt="Wildlife" class="carousel-photo">
+                <img src="https://source.unsplash.com/random/500x300/?travel" alt="Travel" class="carousel-photo">
+            </div>
+        </div>
+    </header>
+    
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="nav-items">
+                <div class="nav-item active" id="nav-home">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </div>
+                <div class="nav-item" id="nav-marketplace">
+                    <i class="fas fa-store"></i>
+                    <span>Marketplace</span>
+                </div>
+                <div class="nav-item" id="nav-feed">
+                    <i class="fas fa-images"></i>
+                    <span>Daily Feed</span>
+                </div>
+                <div class="nav-item" id="nav-profile">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </div>
+                <div class="nav-item notification-bell" id="notification-bell">
+                    <i class="fas fa-bell"></i>
+                    <span>Notifications</span>
+                    <div class="badge">3</div>
+                    
+                    <!-- Notification Dropdown -->
+                    <div class="notification-dropdown">
+                        <div class="notification-header">
+                            Notifications
+                            <span class="notification-clear">Clear All</span>
+                        </div>
+                        <!-- Notifications will be loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Auth Buttons -->
+            <div class="auth-buttons" id="auth-buttons">
+                <button class="auth-btn login-btn" id="login-btn">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Home Section -->
+        <section id="home-section">
+            <h2 class="section-title">Welcome to Amir'O Graphy</h2>
+            <p>Discover stunning photography and share your own visual stories with our community.</p>
+            
+            <div class="marketplace" id="featured-photos" style="margin-top: 2rem;">
+                <!-- Featured photos will be loaded here -->
+            </div>
+            
+            <button class="upload-btn" id="upload-btn-home">
+                <i class="fas fa-upload"></i> Upload Your Photo
+            </button>
+        </section>
+        
+        <!-- Marketplace Section -->
+        <section id="marketplace-section" style="display: none;">
+            <h2 class="section-title">Marketplace</h2>
+            <p>Browse and purchase premium photos or download free selections.</p>
+            
+            <div class="filter-options" style="margin: 1.5rem 0; display: flex; gap: 0.8rem;">
+                <button class="action-btn filter-all" style="background-color: var(--secondary);">
+                    <i class="fas fa-layer-group"></i> All
+                </button>
+                <button class="action-btn filter-free" style="background-color: var(--success);">
+                    <i class="fas fa-tag"></i> Free
+                </button>
+                <button class="action-btn filter-premium" style="background-color: var(--primary);">
+                    <i class="fas fa-crown"></i> Premium
+                </button>
+            </div>
+            
+            <div class="marketplace" id="marketplace-photos">
+                <!-- Photos loaded via JavaScript -->
+            </div>
+        </section>
+        
+        <!-- Daily Feed Section -->
+        <section id="feed-section" style="display: none;">
+            <div class="upload-area">
+                <input type="file" id="photo-upload" accept="image/*" style="display: none;">
+                <button class="upload-btn" id="upload-btn-feed">
+                    <i class="fas fa-plus"></i> Upload Photo
+                </button>
+                
+                <div class="tag-input-container">
+                    <label for="photo-tags" class="tag-input-label">Add Tags (comma separated)</label>
+                    <input type="text" id="photo-tags" class="tag-input" placeholder="nature, sunset, landscape">
+                    <p class="tag-hint">Add relevant tags to help others discover your photo</p>
+                </div>
+            </div>
+            
+            <h2 class="section-title">Community Feed</h2>
+            
+            <div class="feed" id="community-feed">
+                <!-- Posts loaded via JavaScript -->
+            </div>
+        </section>
+        
+        <!-- Profile Section -->
+        <section id="profile-section" style="display: none;">
+            <div class="profile-header" id="user-profile">
+                <!-- Loaded via JavaScript -->
+            </div>
+            
+            <div class="profile-tabs">
+                <div class="profile-tab active" id="tab-uploads">
+                    My Uploads
+                    <div class="badge" id="uploads-badge">0</div>
+                </div>
+                <div class="profile-tab" id="tab-favorites">
+                    Favorites
+                    <div class="badge" id="favorites-badge">0</div>
+                </div>
+                <div class="profile-tab" id="tab-purchased">
+                    Purchased
+                    <div class="badge" id="purchased-badge">0</div>
+                </div>
+                <div class="profile-tab" id="tab-monetization">
+                    Monetization
+                </div>
+            </div>
+            
+            <div id="uploads-tab">
+                <div class="marketplace" id="user-uploads">
+                    <!-- User's photos loaded via JavaScript -->
+                </div>
+            </div>
+            
+            <div id="favorites-tab" style="display: none;">
+                <p>Your favorite photos will appear here.</p>
+            </div>
+            
+            <div id="purchased-tab" style="display: none;">
+                <p>Photos you've purchased will appear here.</p>
+            </div>
+            
+            <div id="monetization-tab" style="display: none;">
+                <div class="about-section">
+                    <h3>Monetization Status</h3>
+                    <div id="monetization-status">
+                        <!-- Loaded via JavaScript -->
+                    </div>
+                    
+                    <h3 style="margin-top: 2rem;">Apply for Monetization</h3>
+                    <div id="monetization-apply">
+                        <!-- Loaded via JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Admin Controls (Only visible to admin) -->
+    <div class="admin-controls" id="admin-controls" style="display: none;">
+        <button class="admin-btn" id="admin-btn">
+            <i class="fas fa-cog"></i>
+        </button>
+        
+        <div class="admin-panel" id="admin-panel">
+            <div class="admin-title">Admin Panel</div>
+            <div class="admin-option" id="admin-notify-all">
+                <i class="fas fa-bullhorn"></i>
+                Notify All Users
+            </div>
+            <div class="admin-option" id="admin-notify-user">
+                <i class="fas fa-envelope"></i>
+                Notify Specific User
+            </div>
+            <div class="admin-option" id="admin-remove-post">
+                <i class="fas fa-trash"></i>
+                Remove Post
+            </div>
+            <div class="admin-option" id="admin-suspend-user">
+                <i class="fas fa-user-lock"></i>
+                Suspend User
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modals -->
+    <div class="modal" id="login-modal">
+        <div class="modal-content">
+            <button class="modal-close" id="login-modal-close">&times;</button>
+            <h3 class="modal-title">Sign In to Continue</h3>
+            <p class="modal-subtitle">Join our community of photographers</p>
+            
+            <button class="google-login-btn" id="google-login-btn">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" class="google-icon">
+                Sign in with Google
+            </button>
+            
+            <p class="modal-text">
+                By signing in, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+            </p>
+        </div>
+    </div>
+    
+    <!-- Subscription Modal -->
+    <div class="modal" id="subscription-modal">
+        <div class="modal-content">
+            <button class="modal-close" id="subscription-modal-close">&times;</button>
+            <h3 class="modal-title">Upgrade Your Membership</h3>
+            <p class="modal-subtitle">Choose the plan that works best for you</p>
+            
+            <div class="subscription-options">
+                <div class="subscription-card" id="explorer-plan">
+                    <h4 class="subscription-title">
+                        <i class="fas fa-map"></i> Explorer
+                    </h4>
+                    <div class="subscription-price">$2.99 <span>/month</span></div>
+                    <ul class="subscription-features">
+                        <li><i class="fas fa-check"></i> 5 daily uploads</li>
+                        <li><i class="fas fa-check"></i> 5 daily downloads</li>
+                        <li><i class="fas fa-check"></i> Access to free content</li>
+                        <li><i class="fas fa-check"></i> Basic support</li>
+                    </ul>
+                    <button class="subscribe-btn" id="subscribe-explorer">
+                        <i class="fas fa-arrow-right"></i> Select Plan
+                    </button>
+                </div>
+                
+                <div class="subscription-card selected" id="unlimited-plan">
+                    <div class="popular-badge">Most Popular</div>
+                    <h4 class="subscription-title">
+                        <i class="fas fa-crown"></i> Unlimited
+                    </h4>
+                    <div class="subscription-price">$7.99 <span>/month</span></div>
+                    <ul class="subscription-features">
+                        <li><i class="fas fa-check"></i> Unlimited uploads</li>
+                        <li><i class="fas fa-check"></i> Unlimited downloads</li>
+                        <li><i class="fas fa-check"></i> Access to premium content</li>
+                        <li><i class="fas fa-check"></i> Priority support</li>
+                        <li><i class="fas fa-check"></i> Exclusive tutorials</li>
+                        <li><i class="fas fa-check"></i> Early monetization</li>
+                    </ul>
+                    <button class="subscribe-btn" id="subscribe-unlimited">
+                        <i class="fas fa-arrow-right"></i> Select Plan
+                    </button>
+                </div>
+            </div>
+            
+            <p class="modal-text">
+                Cancel anytime. 30-day money-back guarantee.
+            </p>
+        </div>
+    </div>
+    
+    <!-- Admin Notification Modal -->
+    <div class="modal" id="admin-notify-modal">
+        <div class="modal-content">
+            <button class="modal-close" id="admin-modal-close">&times;</button>
+            <h3 class="modal-title" id="admin-modal-title">Admin Notification</h3>
+            
+            <div id="notify-all-form">
+                <div class="tag-input-container">
+                    <label for="notification-title" class="tag-input-label">Notification Title</label>
+                    <input type="text" id="notification-title" class="tag-input" placeholder="Important Update">
+                </div>
+                
+                <div class="tag-input-container">
+                    <label for="notification-message" class="tag-input-label">Message</label>
+                    <textarea id="notification-message" class="tag-input" rows="4" placeholder="Type your message here..."></textarea>
+                </div>
+                
+                <button class="subscribe-btn" id="send-notification-all" style="margin-top: 1rem;">
+                    <i class="fas fa-paper-plane"></i> Send to All Users
+                </button>
+            </div>
+            
+            <div id="notify-user-form" style="display: none;">
+                <div class="tag-input-container">
+                    <label for="user-email" class="tag-input-label">User Email</label>
+                    <input type="email" id="user-email" class="tag-input" placeholder="user@example.com">
+                </div>
+                
+                <div class="tag-input-container">
+                    <label for="user-notification-title" class="tag-input-label">Notification Title</label>
+                    <input type="text" id="user-notification-title" class="tag-input" placeholder="Important Message">
+                </div>
+                
+                <div class="tag-input-container">
+                    <label for="user-notification-message" class="tag-input-label">Message</label>
+                    <textarea id="user-notification-message" class="tag-input" rows="4" placeholder="Type your message here..."></textarea>
+                </div>
+                
+                <button class="subscribe-btn" id="send-notification-user" style="margin-top: 1rem;">
+                    <i class="fas fa-paper-plane"></i> Send Notification
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">Amir'O Graphy</div>
+            <div class="footer-links">
+                <a href="#" class="footer-link">Home</a>
+                <a href="#" class="footer-link">Marketplace</a>
+                <a href="#" class="footer-link">About</a>
+                <a href="#" class="footer-link">Contact</a>
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="#" class="footer-link">Terms</a>
+            </div>
+            <div class="footer-social">
+                <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-pinterest"></i></a>
+            </div>
+            <p class="footer-text">© <span id="current-year"></span> Amir'O Graphy. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Files -->
+    <script type="module" src="js/firebase-config.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <script type="module" src="js/photos.js"></script>
+    <script type="module" src="js/ui.js"></script>
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
