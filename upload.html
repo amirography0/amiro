@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Photos - AmirO Graphy</title>
+    <style>
+        /* Global Styles */
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --accent: #f72585;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: rgba(26, 26, 46, 0.9);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            background: linear-gradient(to right, #f72585, #4361ee);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* Upload Container */
+        .upload-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+
+        .upload-title {
+            margin-bottom: 2rem;
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+
+        .upload-area {
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 3rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: rgba(67, 97, 238, 0.1);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .preview-item {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        textarea.form-input {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Tags */
+        .tag-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .tag {
+            background: var(--primary);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .remove-tag {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .btn-accent {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-accent:hover {
+            background: #d91a6d;
+            transform: translateY(-2px);
+        }
+
+        /* Loading */
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .upload-container {
+                padding: 1rem;
+            }
+            
+            .upload-area {
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <a href="gallery.html" class="logo">AmirO Graphy</a>
+        <div class="user-info">
+            <img id="user-avatar" class="avatar" src="" alt="User">
+            <span id="user-name"></span>
+        </div>
+    </header>
+
+    <!-- Upload Container -->
+    <main class="upload-container">
+        <h1 class="upload-title">Upload Your Photos</h1>
+        
+        <div class="upload-area" id="upload-area">
+            <div class="upload-icon">📷</div>
+            <h3>Drag & Drop your photos here</h3>
+            <p>or click to browse files</p>
+            <input type="file" id="file-input" class="file-input" accept="image/*" multiple>
+        </div>
+
+        <div class="preview-container" id="preview-container">
+            <!-- Preview images will appear here -->
+        </div>
+
+        <div class="form-group">
+            <label for="photo-title" class="form-label">Title</label>
+            <input type="text" id="photo-title" class="form-input" placeholder="Give your photo a title">
+        </div>
+
+        <div class="form-group">
+            <label for="photo-description" class="form-label">Description</label>
+            <textarea id="photo-description" class="form-input" placeholder="Tell the story behind this photo"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Tags</label>
+            <div style="display: flex; gap: 0.5rem;">
+                <input type="text" id="tag-input" class="form-input" placeholder="nature, portrait, etc.">
+                <button id="add-tag-btn" class="btn btn-primary">Add</button>
+            </div>
+            <div class="tag-container" id="tag-container">
+                <!-- Tags will appear here -->
+            </div>
+        </div>
+
+        <button id="submit-btn" class="btn btn-accent" style="width: 100%; padding: 1rem;">Upload Photos</button>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div class="loading" id="loading-overlay">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyC2x2NAN2xZ-PFUrJGxnS09v-cg0jXJOLs",
+            authDomain: "amiro-43a10.firebaseapp.com",
+            projectId: "amiro-43a10",
+            storageBucket: "amiro-43a10.appspot.com",
+            messagingSenderId: "524889617977",
+            appId: "1:524889617977:web:115fac223d2735e9717fe8"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // DOM Elements
+        const userAvatar = document.getElementById('user-avatar');
+        const userName = document.getElementById('user-name');
+        const uploadArea = document.getElementById('upload-area');
+        const fileInput = document.getElementById('file-input');
+        const previewContainer = document.getElementById('preview-container');
+        const submitBtn = document.getElementById('submit-btn');
+        const addTagBtn = document.getElementById('add-tag-btn');
+        const tagInput = document.getElementById('tag-input');
+        const tagContainer = document.getElementById('tag-container');
+        const loadingOverlay = document.getElementById('loading-overlay');
+
+        // Store files and tags
+        let selectedFiles = [];
+        let tags = [];
+
+        // Show loading
+        function showLoading() {
+            loadingOverlay.style.display = 'flex';
+        }
+
+        // Hide loading
+        function hideLoading() {
+            loadingOverlay.style.display = 'none';
+        }
+
+        // Check auth state
+        auth.onAuthStateChanged((user) => {
+            if (!user) {
+                window.location.href = 'index.html';
+            } else {
+                userAvatar.src = user.photoURL || 'https://via.placeholder.com/40';
+                userName.textContent = user.displayName || 'User';
+            }
+        });
+
+        // Upload area click event
+        uploadArea.addEventListener('click', () => fileInput.click());
+
+        // File input change event
+        fileInput.addEventListener('change', (e) => {
+            selectedFiles = Array.from(e.target.files);
+            showPreviews();
+        });
+
+        // Drag and drop events
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = 'var(--primary)';
+            uploadArea.style.background = 'rgba(67, 97, 238, 0.1)';
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+            uploadArea.style.background = 'transparent';
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+            uploadArea.style.background = 'transparent';
+            
+            selectedFiles = Array.from(e.dataTransfer.files);
+            showPreviews();
+        });
+
+        // Show previews of selected files
+        function showPreviews() {
+            previewContainer.innerHTML = '';
+            
+            selectedFiles.forEach((file, index) => {
+                const reader = new FileReader();
+                
+                reader.onload = (e) => {
+                    const previewItem = document.createElement('div');
+                    previewItem.className = 'preview-item';
+                    
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    
+                    const removeBtn = document.createElement('button');
+                    removeBtn.className = 'remove-btn';
+                    removeBtn.innerHTML = '×';
+                    removeBtn.addEventListener('click', (event) => {
+                        event.stopPropagation();
+                        selectedFiles.splice(index, 1);
+                        showPreviews();
+                    });
+                    
+                    previewItem.appendChild(img);
+                    previewItem.appendChild(removeBtn);
+                    previewContainer.appendChild(previewItem);
+                };
+                
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Add tag functionality
+        addTagBtn.addEventListener('click', addTag);
+        tagInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addTag();
+        });
+
+        function addTag() {
+            const tagText = tagInput.value.trim();
+            if (tagText && !tags.includes(tagText)) {
+                tags.push(tagText);
+                renderTags();
+                tagInput.value = '';
+            }
+        }
+
+        function renderTags() {
+            tagContainer.innerHTML = '';
+            tags.forEach((tag, index) => {
+                const tagElement = document.createElement('div');
+                tagElement.className = 'tag';
+                tagElement.innerHTML = `
+                    ${tag}
+                    <button class="remove-tag" data-index="${index}">×</button>
+                `;
+                tagContainer.appendChild(tagElement);
+            });
+
+            // Add event listeners to remove buttons
+            document.querySelectorAll('.remove-tag').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const index = e.target.getAttribute('data-index');
+                    tags.splice(index, 1);
+                    renderTags();
+                });
+            });
+        }
+
+        // Upload to Cloudinary
+        async function uploadToCloudinary(file) {
+            const cloudName = 'djfsetiuk';
+            const uploadPreset = 'aa9b0201-b098-4aaa-b349-c598c4bd3738';
+            
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', uploadPreset);
+            
+            const response = await fetch(
+                `https://api.cloudinary.com/v1_1/${cloudName}/upload`,
+                { method: 'POST', body: formData }
+            );
+            return await response.json();
+        }
+
+        // Submit photos
+        submitBtn.addEventListener('click', async () => {
+            if (selectedFiles.length === 0) {
+                alert('Please select at least one photo');
+                return;
+            }
+
+            showLoading();
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Uploading...';
+
+            const user = auth.currentUser;
+            const title = document.getElementById('photo-title').value;
+            const description = document.getElementById('photo-description').value;
+
+            try {
+                for (const file of selectedFiles) {
+                    // 1. Upload to Cloudinary
+                    const cloudinaryData = await uploadToCloudinary(file);
+                    
+                    // 2. Save to Firestore
+                    await db.collection('photos').add({
+                        ownerId: user.uid,
+                        ownerName: user.displayName,
+                        ownerAvatar: user.photoURL,
+                        cloudinaryUrl: cloudinaryData.secure_url,
+                        thumbnailUrl: cloudinaryData.secure_url.replace('/upload/', '/upload/w_500,h_500,c_fill/'),
+                        title: title,
+                        description: description,
+                        tags: tags,
+                        likes: [],
+                        likesCount: 0,
+                        commentsCount: 0,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        status: 'public',
+                        monetized: false
+                    });
+                }
+                
+                alert('Photos uploaded successfully!');
+                window.location.href = 'gallery.html';
+            } catch (error) {
+                console.error('Upload error:', error);
+                alert('Upload failed. Please try again.');
+            } finally {
+                hideLoading();
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Upload Photos';
+            }
+        });
+    </script>
+</body>
+</html>
