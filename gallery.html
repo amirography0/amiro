@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - AmirO Graphy</title>
+    <style>
+        /* Global Styles */
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --accent: #f72585;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: rgba(26, 26, 46, 0.9);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            background: linear-gradient(to right, #f72585, #4361ee);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* Gallery Container */
+        .gallery-container {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .gallery-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .gallery-title {
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+
+        .search-filter {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .search-input {
+            padding: 0.6rem 1rem;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            min-width: 200px;
+        }
+
+        .sort-select {
+            padding: 0.6rem;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        /* Photo Grid */
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .photo-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .photo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .photo-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .photo-info {
+            padding: 1rem;
+        }
+
+        .user-info-small {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .avatar-small {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .username {
+            font-weight: 600;
+        }
+
+        .pro-badge {
+            background: linear-gradient(to right, #f72585, #4361ee);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            margin-left: 0.5rem;
+        }
+
+        .photo-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .photo-description {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 0.5rem;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            background: rgba(67, 97, 238, 0.2);
+            color: var(--primary);
+            padding: 0.2rem 0.5rem;
+            border-radius: 50px;
+            font-size: 0.7rem;
+        }
+
+        .photo-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .like-btn.liked {
+            color: var(--accent);
+        }
+
+        .likes-count {
+            font-weight: 600;
+        }
+
+        /* Loading */
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            grid-column: 1 / -1;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .gallery-container {
+                padding: 1rem;
+            }
+            
+            .photo-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-filter {
+                width: 100%;
+            }
+            
+            .search-input {
+                flex: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <a href="gallery.html" class="logo">AmirO Graphy</a>
+        <div class="user-info">
+            <img id="user-avatar" class="avatar" src="" alt="User">
+            <span id="user-name"></span>
+        </div>
+    </header>
+
+    <!-- Gallery Container -->
+    <main class="gallery-container">
+        <div class="gallery-header">
+            <h1 class="gallery-title">Community Gallery</h1>
+            <div class="search-filter">
+                <input type="text" id="search-input" class="search-input" placeholder="Search by tags...">
+                <select id="sort-select" class="sort-select">
+                    <option value="newest">Newest First</option>
+                    <option value="popular">Most Popular</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="photo-grid" id="photo-grid">
+            <!-- Photos will be loaded here -->
+            <div class="empty-state">
+                <p>Loading photos...</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div class="loading" id="loading-overlay">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyC2x2NAN2xZ-PFUrJGxnS09v-cg0jXJOLs",
+            authDomain: "amiro-43a10.firebaseapp.com",
+            projectId: "amiro-43a10",
+            storageBucket: "amiro-43a10.appspot.com",
+            messagingSenderId: "524889617977",
+            appId: "1:524889617977:web:115fac223d2735e9717fe8"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // DOM Elements
+        const userAvatar = document.getElementById('user-avatar');
+        const userName = document.getElementById('user-name');
+        const photoGrid = document.getElementById('photo-grid');
+        const searchInput = document.getElementById('search-input');
+        const sortSelect = document.getElementById('sort-select');
+        const loadingOverlay = document.getElementById('loading-overlay');
+
+        // Store photos
+        let photos = [];
+        let currentUser = null;
+
+        // Show loading
+        function showLoading() {
+            loadingOverlay.style.display = 'flex';
+        }
+
+        // Hide loading
+        function hideLoading() {
+            loadingOverlay.style.display = 'none';
+        }
+
+        // Check auth state
+        auth.onAuthStateChanged((user) => {
+            if (!user) {
+                window.location.href = 'index.html';
+            } else {
+                currentUser = user;
+                userAvatar.src = user.photoURL || 'https://via.placeholder.com/40';
+                userName.textContent = user.displayName || 'User';
+                loadPhotos();
+            }
+        });
+
+        // Load photos from Firestore
+        function loadPhotos() {
+            showLoading();
+            
+            let query = db.collection('photos').where('status', '==', 'public');
+            
+            // Apply search filter
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            if (searchTerm) {
+                query = query.where('tags', 'array-contains', searchTerm);
+            }
+            
+            // Apply sort
+            if (sortSelect.value === 'newest') {
+                query = query.orderBy('createdAt', 'desc');
+            } else {
+                query = query.orderBy('likesCount', 'desc');
+            }
+            
+            query.get()
+                .then((querySnapshot) => {
+                    photos = [];
+                    querySnapshot.forEach((doc) => {
+                        photos.push({
+                            id: doc.id,
+                            ...doc.data()
+                        });
+                    });
+                    
+                    renderPhotos();
+                    hideLoading();
+                })
+                .catch((error) => {
+                    console.error('Error loading photos:', error);
+                    photoGrid.innerHTML = '<div class="empty-state"><p>Failed to load photos. Please try again.</p></div>';
+                    hideLoading();
+                });
+        }
+
+        // Render photos to the grid
+        function renderPhotos() {
+            if (photos.length === 0) {
+                photoGrid.innerHTML = '<div class="empty-state"><p>No photos found. Be the first to upload!</p></div>';
+                return;
+            }
+            
+            photoGrid.innerHTML = '';
+            
+            photos.forEach(photo => {
+                const isLiked = photo.likes && photo.likes.includes(currentUser.uid);
+                const likeBtnClass = isLiked ? 'action-btn like-btn liked' : 'action-btn like-btn';
+                
+                const photoCard = document.createElement('div');
+                photoCard.className = 'photo-card';
+                photoCard.innerHTML = `
+                    <img src="${photo.thumbnailUrl || photo.cloudinaryUrl}" alt="${photo.title || 'Photo'}" class="photo-img">
+                    <div class="photo-info">
+                        <div class="user-info-small">
+                            <img src="${photo.ownerAvatar || 'https://via.placeholder.com/30'}" alt="${photo.ownerName}" class="avatar-small">
+                            <span class="username">${photo.ownerName}</span>
+                            ${photo.monetized ? '<span class="pro-badge">PRO</span>' : ''}
+                        </div>
+                        <h3 class="photo-title">${photo.title || 'Untitled'}</h3>
+                        <p class="photo-description">${photo.description || ''}</p>
+                        <div class="tags">
+                            ${photo.tags ? photo.tags.map(tag => `<span class="tag">${tag}</span>`).join('') : ''}
+                        </div>
+                        <div class="photo-actions">
+                            <div class="action-buttons">
+                                <button class="${likeBtnClass}" data-photo-id="${photo.id}">❤️</button>
+                                <button class="action-btn">💬 ${photo.commentsCount || 0}</button>
+                                <button class="action-btn download-btn" data-url="${photo.cloudinaryUrl}">⬇️</button>
+                            </div>
+                            <span class="likes-count">${photo.likesCount || 0} likes</span>
+                        </div>
+                    </div>
+                `;
+                
+                photoGrid.appendChild(photoCard);
+            });
+            
+            // Add event listeners
+            document.querySelectorAll('.like-btn').forEach(btn => {
+                btn.addEventListener('click', handleLike);
+            });
+            
+            document.querySelectorAll('.download-btn').forEach(btn => {
+                btn.addEventListener('click', handleDownload);
+            });
+        }
+
+        // Handle like/unlike
+        function handleLike(e) {
+            if (!currentUser) return;
+            
+            const photoId = e.target.getAttribute('data-photo-id');
+            const photoRef = db.collection('photos').doc(photoId);
+            const photo = photos.find(p => p.id === photoId);
+            
+            const isLiked = photo.likes && photo.likes.includes(currentUser.uid);
+            
+            if (isLiked) {
+                // Unlike
+                photoRef.update({
+                    likes: firebase.firestore.FieldValue.arrayRemove(currentUser.uid),
+                    likesCount: firebase.firestore.FieldValue.increment(-1)
+                })
+                .then(() => {
+                    e.target.classList.remove('liked');
+                    const likesCount = e.target.closest('.photo-actions').querySelector('.likes-count');
+                    likesCount.textContent = `${(photo.likesCount || 1) - 1} likes`;
+                })
+                .catch(error => {
+                    console.error('Error unliking photo:', error);
+                });
+            } else {
+                // Like
+                photoRef.update({
+                    likes: firebase.firestore.FieldValue.arrayUnion(currentUser.uid),
+                    likesCount: firebase.firestore.FieldValue.increment(1)
+                })
+                .then(() => {
+                    e.target.classList.add('liked');
+                    const likesCount = e.target.closest('.photo-actions').querySelector('.likes-count');
+                    likesCount.textContent = `${(photo.likesCount || 0) + 1} likes`;
+                })
+                .catch(error => {
+                    console.error('Error liking photo:', error);
+                });
+            }
+        }
+
+        // Handle download
+        function handleDownload(e) {
+            const photoUrl = e.target.getAttribute('data-url');
+            const a = document.createElement('a');
+            a.href = photoUrl;
+            a.download = `photo-${Date.now()}.jpg`;
+            a.click();
+        }
+
+        // Event listeners for search and sort
+        searchInput.addEventListener('input', loadPhotos);
+        sortSelect.addEventListener('change', loadPhotos);
+    </script>
+</body>
+</html>
